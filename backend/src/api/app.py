@@ -5,9 +5,10 @@ Clean, organized application with proper database integration.
 
 import time
 import logging
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 from .routes import router
 
@@ -126,6 +127,40 @@ app.add_middleware(
     allow_methods=["GET"],  # Only GET methods for read-only API
     allow_headers=["*"],
 )
+
+# Global exception handler to ensure CORS headers are included in error responses
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Handle all exceptions and ensure CORS headers are included."""
+    logger.error(f"❌ Unhandled exception: {str(exc)}")
+    
+    # Create error response with CORS headers
+    response = JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error. Please check if database is configured properly."}
+    )
+    
+    # Add CORS headers manually
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    
+    return response
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Handle HTTP exceptions and ensure CORS headers are included."""
+    response = JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
+    
+    # Add CORS headers manually
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    
+    return response
 
 # Include API routes
 app.include_router(router)

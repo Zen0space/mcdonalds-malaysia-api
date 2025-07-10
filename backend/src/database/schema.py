@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS outlets (
     waze_link TEXT,
     latitude REAL,
     longitude REAL,
+    features TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -28,6 +29,11 @@ CREATE_INDEXES = [
 # Unique constraint for existing tables (migration)
 ADD_UNIQUE_CONSTRAINT = """
 CREATE UNIQUE INDEX IF NOT EXISTS idx_outlets_name_unique ON outlets(name);
+"""
+
+# Add features column to existing tables (migration)
+ADD_FEATURES_COLUMN = """
+ALTER TABLE outlets ADD COLUMN features TEXT;
 """
 
 # Trigger to update updated_at timestamp
@@ -49,4 +55,4 @@ def get_schema_queries():
 
 def get_migration_queries():
     """Get migration queries for existing databases"""
-    return [ADD_UNIQUE_CONSTRAINT] 
+    return [ADD_UNIQUE_CONSTRAINT, ADD_FEATURES_COLUMN] 

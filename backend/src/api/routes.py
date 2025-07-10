@@ -132,12 +132,15 @@ async def get_outlets(
             search_term = f"%{search}%"
             params.extend([search_term, search_term])
         
-        # Add features filter
+        # Add features filter - only 24-hour filtering supported with real data
         if features:
             feature_list = [f.strip() for f in features.split(",")]
             for feature in feature_list:
-                where_conditions.append("features LIKE ?")
-                params.append(f"%{feature}%")
+                feature_lower = feature.lower()
+                if feature_lower in ['24hrs', '24', '24hours']:
+                    # Search for 24-hour outlets in operating_hours
+                    where_conditions.append("operating_hours LIKE ?")
+                    params.append("%24%")
         
         # Build WHERE clause
         where_clause = ""
