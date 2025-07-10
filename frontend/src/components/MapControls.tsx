@@ -1,39 +1,53 @@
 'use client'
 
-import { useState } from 'react'
-
-export interface FilterOptions {
-  showRadius: boolean
-  features: {
-    twentyFourHours: boolean
-  }
-  searchQuery: string
-}
+import { useState, memo } from 'react'
+import type { FilterOptions, OutletIntersectionData, Outlet } from '../types'
 
 interface MapControlsProps {
   filters: FilterOptions
-  onFiltersChange: (filters: FilterOptions) => void
+  onFiltersChange: (_: FilterOptions) => void
   outletCount: number
   filteredCount: number
   loadingIntersections?: boolean
-  intersectionData?: Map<number, any>
-  selectedOutlet?: any
+  intersectionData?: Map<number, OutletIntersectionData>
+  selectedOutlet?: Outlet
   onClearSelection?: () => void
 }
 
-export default function MapControls({ 
+/**
+ * Control panel component for map filters and outlet information.
+ * Provides search functionality, feature filtering, and outlet statistics.
+ * Optimized with React.memo for performance.
+ * 
+ * @param {MapControlsProps} props - Component props
+    * @param {FilterOptions} props.filters - Current filter state
+ * @param {function} props.onFiltersChange - Callback for filter changes
+ * @param {number} props.outletCount - Total number of outlets
+ * @param {number} props.filteredCount - Number of outlets after filtering
+ * @param {boolean} props.loadingIntersections - Loading state for intersection calculations
+ * @param {Map<number, OutletIntersectionData>} props.intersectionData - Intersection analysis data
+ * @param {Outlet} props.selectedOutlet - Currently selected outlet
+ * @param {function} props.onClearSelection - Callback to clear outlet selection
+ * @returns {JSX.Element} Map controls component
+ */
+const MapControls = memo(function MapControls({ 
   filters, 
   onFiltersChange, 
   outletCount, 
-  filteredCount,
-  loadingIntersections,
-  intersectionData,
-  selectedOutlet,
-  onClearSelection
+  filteredCount, 
+  loadingIntersections, 
+  selectedOutlet, 
+  onClearSelection 
 }: MapControlsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const handleFilterChange = (key: keyof FilterOptions, value: any) => {
+  /**
+   * Handle filter changes and update parent component state.
+   * 
+   * @param {keyof FilterOptions} key - Filter property to update
+   * @param {boolean | string} value - New filter value
+   */
+  const handleFilterChange = (key: keyof FilterOptions, value: boolean | string) => {
     onFiltersChange({
       ...filters,
       [key]: value
@@ -55,7 +69,7 @@ export default function MapControls({
       {/* Main Controls */}
       <div className="controls-header">
         <div className="controls-title">
-          <h3>🍟 McDonald's Map</h3>
+                      <h3>🍟 McDonald&apos;s Map</h3>
           <div className="outlet-counter">
             <span className="count-primary">{filteredCount}</span>
             <span className="count-secondary">/ {outletCount} outlets</span>
@@ -173,4 +187,6 @@ export default function MapControls({
       )}
     </div>
   )
-} 
+})
+
+export default MapControls 

@@ -324,7 +324,11 @@ output/
 exports/
 *.csv
 *.xlsx
-*.json
+# Only ignore scraped data JSON files, not config files
+scraped_data/*.json
+output/*.json
+exports/*.json
+debug_*.json
 !sample_*.json
 !example_*.json
 

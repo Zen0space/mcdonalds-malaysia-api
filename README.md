@@ -93,6 +93,10 @@ geolocation-mcdscraper/
 
 3. **Install backend dependencies**
    ```bash
+   # Make sure virtual environment is activated first
+   # venv\Scripts\activate  # Windows
+   # source venv/bin/activate  # Linux/Mac
+   
    cd backend
    pip install -r requirements.txt
    ```
@@ -108,28 +112,47 @@ geolocation-mcdscraper/
    playwright install
    ```
 
+6. **Install frontend dependencies** (Phase 4 - Optional)
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
 ### Running the Application
 
-#### Enhanced API Backend (Current Status)
+#### Backend API (Current Status)
 ```bash
-# Activate virtual environment first
+# 1. Activate virtual environment first
 venv\Scripts\activate  # Windows
+# or
+source venv/bin/activate  # Linux/Mac
 
-# Start the enhanced API
-uvicorn backend.src.api.app:app --reload
+# 2. Navigate to backend directory
+cd backend
+
+# 3. Start the API server
+python main.py
 ```
 
-#### Full Stack (After Phase 4)
+#### Frontend (Phase 4 - Optional)
 ```bash
+# In a new terminal window
+cd frontend
+npm run dev
+```
+
+#### Full Stack Development (Alternative)
+```bash
+# After both backend and frontend are set up
 python scripts/dev.py
 ```
 
 ### Access Points
 
-- **Enhanced API Backend**: http://localhost:8000
-- **Professional API Documentation**: http://localhost:8000/docs (with rich examples)
-- **Alternative Documentation**: http://localhost:8000/redoc
-- **Frontend**: http://localhost:3000 (Phase 4 - upcoming)
+- **Backend API**: http://localhost:8000
+- **API Documentation (Swagger)**: http://localhost:8000/docs
+- **API Documentation (ReDoc)**: http://localhost:8000/redoc
+- **Frontend**: http://localhost:3000 (Phase 4)
 
 ## 📋 Development Phases
 
@@ -153,11 +176,16 @@ python scripts/dev.py
 - [x] Request logging, response timing, and performance optimization
 - [x] Production-ready error handling and validation
 
-### 🎨 Phase 4: Frontend Development (Days 9-12)
-- [ ] React/Next.js setup
-- [ ] Interactive maps and visualization
-- [ ] Responsive UI/UX design
-- [ ] API integration
+### 🎨 Phase 4: Frontend Development (Days 9-12) - IN PROGRESS
+- [x] React/Next.js setup with TypeScript
+- [x] Interactive maps with React Leaflet
+- [x] Modern UI/UX design with custom styling
+- [x] API integration with backend
+- [x] McDonald's outlet visualization with custom markers
+- [x] 5KM radius intersection analysis
+- [x] Advanced filtering and search functionality
+- [x] Error boundaries and loading states
+- [x] Production build optimization
 
 ### 🤖 Phase 5: Chatbot Integration (Days 13-15)
 - [ ] Chatbot backend development
@@ -211,10 +239,16 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ```bash
 # Backend tests
+# 1. Activate virtual environment
+venv\Scripts\activate  # Windows
+# or
+source venv/bin/activate  # Linux/Mac
+
+# 2. Run backend tests
 cd backend
 python -m pytest
 
-# Frontend tests (after Phase 4)
+# Frontend tests
 cd frontend
 npm test
 
@@ -265,6 +299,6 @@ For questions or issues:
 
 ---
 
-**Status**: ✅ Phase 3 Complete - Enhanced API Ready | 🚧 Phase 4 Next - Frontend Development  
-**Current Achievement**: Professional FastAPI backend with 50 KL outlets, advanced search, GPS-based nearby search, and comprehensive documentation  
-**Last Updated**: July 2025 
+**Status**: ✅ Phase 3 Complete - Enhanced API Ready | 🚧 Phase 4 In Progress - Frontend Development  
+**Current Achievement**: Professional FastAPI backend with 50 KL outlets, advanced search, GPS-based nearby search, comprehensive documentation, and modern React frontend with interactive maps  
+**Last Updated**: January 2025 

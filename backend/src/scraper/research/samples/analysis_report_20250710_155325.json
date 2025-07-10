@@ -1,0 +1,116 @@
+{
+  "analysis_timestamp": "2025-07-10 15:53:25",
+  "url_analyzed": "https://www.mcdonalds.com.my/locate-us",
+  "page_structure": {
+    "title": "            McDonald's Malaysia | Locate Us    ",
+    "meta_description": "",
+    "scripts": [
+      "https://www.googletagmanager.com/gtag/js?id=G-7M0RD262TY",
+      "https://www.mcdonalds.com.my/bower_resources/moment/min/moment.min.js",
+      "/libs/booking-date-picker/js/pikaday.js",
+      "/en/lang.js?v=1752133981",
+      "/js/app.js?v=1752133981",
+      "https://www.mcdonalds.com.my/js/legacy/autocomplete.js",
+      "/storefinder/includes/geoip.php",
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyBeaTF3a3-dYGwNE43DglhUt-sgJQfJh_U&sensor=false&libraries=geometry,places",
+      "/storefinder/js/jquery.geocomplete.js",
+      "/js/locateus.js"
+    ],
+    "forms": [],
+    "select_elements": [
+      {
+        "name": "",
+        "id": "states",
+        "options": [
+          "All",
+          "Johor",
+          "Kedah",
+          "Kelantan",
+          "Kuala Lumpur",
+          "Labuan",
+          "Melaka",
+          "Negeri Sembilan",
+          "Pahang",
+          "Pulau Pinang",
+          "Perak",
+          "Perlis",
+          "Putrajaya",
+          "Sabah",
+          "Sarawak",
+          "Selangor",
+          "Terengganu"
+        ]
+      },
+      {
+        "name": "",
+        "id": "categories",
+        "options": [
+          "All Categories",
+          "24 Hours",
+          "Birthday Party",
+          "Breakfast",
+          "Cashless Facility",
+          "Dessert Center",
+          "Digital Order Kiosk",
+          "Drive-Thru",
+          "Electric Vehicle",
+          "McCafe",
+          "McDelivery",
+          "Surau",
+          "WiFi"
+        ]
+      }
+    ],
+    "outlet_containers": [
+      {
+        "tag": "div",
+        "class": [
+          "location_inputs"
+        ],
+        "id": "",
+        "text_preview": "By StateAllJohorKedahKelantanKuala LumpurLabuanMelakaNegeri SembilanPahangPulau PinangPerakPerlisPut..."
+      }
+    ],
+    "javascript_hints": [],
+    "ajax_hints": []
+  },
+  "javascript_requirements": {
+    "empty_containers": 0,
+    "loading_indicators": 0,
+    "api_endpoints": [],
+    "ajax_patterns": 0
+  },
+  "kuala_lumpur_findings": {
+    "kl_mentions": 2,
+    "state_options": [
+      "All",
+      "Johor",
+      "Kedah",
+      "Kelantan",
+      "Kuala Lumpur",
+      "Labuan",
+      "Melaka",
+      "Negeri Sembilan",
+      "Pahang",
+      "Pulau Pinang",
+      "Perak",
+      "Perlis",
+      "Putrajaya",
+      "Sabah",
+      "Sarawak",
+      "Selangor",
+      "Terengganu"
+    ],
+    "filtering_mechanism": {
+      "type": "select_dropdown",
+      "name": "",
+      "id": "states"
+    },
+    "outlet_previews": []
+  },
+  "recommendations": [
+    "✅ requests + BeautifulSoup likely sufficient",
+    "✅ State filtering available via select_dropdown",
+    "⚠️ Outlet data may be loaded dynamically"
+  ]
+}

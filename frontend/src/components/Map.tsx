@@ -1,37 +1,47 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, memo, useCallback } from 'react'
 import * as L from 'leaflet'
 import { MAP_CONFIG } from '../utils/distance'
-
-interface Outlet {
-  id: number
-  name: string
-  address: string
-  latitude: number
-  longitude: number
-  operating_hours?: string
-  waze_link?: string
-}
+import { logger } from '../utils/logger'
+import type { Outlet, OutletIntersectionData, NeighborOutlet } from '../types'
 
 interface MapProps {
   outlets: Outlet[]
   showRadius: boolean
-  intersectionData?: Map<number, any>
-  loadingIntersections?: boolean
-  onOutletClick?: (outlet: Outlet) => void
-  selectedOutlet?: Outlet | null
+  intersectionData?: Map<number, OutletIntersectionData>
+  onOutletClick?: (_: Outlet) => void
+  selectedOutlet?: Outlet
 }
 
-export default function Map({ outlets, showRadius, intersectionData, loadingIntersections, onOutletClick, selectedOutlet }: MapProps) {
+/**
+ * Interactive map component displaying McDonald's outlets with custom markers and radius circles.
+ * Features include outlet visualization, intersection highlighting, and user interaction handling.
+ * Optimized with React.memo for performance.
+ * 
+ * @param {MapProps} props - Component props
+ * @param {Outlet[]} props.outlets - Array of outlet data to display
+ * @param {boolean} props.showRadius - Whether to show 5KM radius circles
+    * @param {Map<number, OutletIntersectionData>} props.intersectionData - Intersection analysis data
+   * @param {function} props.onOutletClick - Callback for outlet marker clicks
+ * @param {Outlet} props.selectedOutlet - Currently selected outlet
+ * @returns {JSX.Element} Interactive map component
+ */
+const Map = memo(function Map({ outlets, showRadius, intersectionData, onOutletClick, selectedOutlet }: MapProps) {
   const mapRef = useRef<L.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const circlesRef = useRef<L.Circle[]>([])
   const selectedCircleRef = useRef<L.Circle | null>(null)
   const selectedMarkersRef = useRef<L.Marker[]>([])
 
-  // Create custom McDonald's marker icons
-  const createCustomMarker = (color: string, isHovered: boolean = false) => {
+  /**
+   * Create custom McDonald's-themed marker icons with dynamic styling.
+   * 
+   * @param {string} color - Marker color (hex or CSS color)
+   * @param {boolean} isHovered - Whether marker is in hover state
+   * @returns {L.DivIcon} Custom Leaflet marker icon
+   */
+  const createCustomMarker = useCallback((color: string, isHovered: boolean = false) => {
     const size = isHovered ? 48 : 40
     const shadowSize = isHovered ? 6 : 4
     
@@ -62,10 +72,15 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
       iconAnchor: [size / 2, size / 2],
       popupAnchor: [0, -size / 2 - 10]
     })
-  }
+  }, [])
 
-  // Get marker color based on intersection status
-  const getMarkerColor = (outlet: Outlet) => {
+  /**
+   * Determine marker color based on intersection analysis data.
+   * 
+   * @param {Outlet} outlet - Outlet data
+   * @returns {string} Hex color code for the marker
+   */
+  const getMarkerColor = useCallback((outlet: Outlet) => {
     if (!intersectionData || !intersectionData.has(outlet.id)) {
       return '#dc2626' // McDonald's red fallback
     }
@@ -73,10 +88,15 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
     const data = intersectionData.get(outlet.id)
     // Simple binary coloring: Red if has intersection, Green if isolated
     return data?.hasIntersection ? '#ef4444' : '#22c55e'  // Red for intersecting, Green for isolated
-  }
+  }, [intersectionData])
 
-  // Create custom popup content with intersection information
-  const createPopupContent = (outlet: Outlet) => {
+  /**
+   * Generate HTML content for outlet popup with intersection information.
+   * 
+   * @param {Outlet} outlet - Outlet data
+   * @returns {string} HTML string for popup content
+   */
+  const createPopupContent = useCallback((outlet: Outlet) => {
     const color = getMarkerColor(outlet)
     const intersectionInfo = intersectionData?.get(outlet.id)
     
@@ -131,7 +151,7 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
               ${intersectionInfo.hasIntersection && intersectionInfo.intersectingOutlets.length > 0 ? `
                 <p style="margin: 4px 0 0 0; color: #666; font-size: 11px;">
                   <strong>Intersecting outlets:</strong><br/>
-                  ${intersectionInfo.intersectingOutlets.slice(0, 3).map((outlet: any) => 
+                  ${intersectionInfo.intersectingOutlets.slice(0, 3).map((outlet: NeighborOutlet) => 
                     `• ${outlet.name} (${outlet.distance_km}km)`
                   ).join('<br/>')}
                   ${intersectionInfo.intersectingOutlets.length > 3 ? `<br/>• ... and ${intersectionInfo.intersectingOutlets.length - 3} more` : ''}
@@ -157,7 +177,7 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
         </div>
       </div>
     `
-  }
+  }, [getMarkerColor, intersectionData])
 
   useEffect(() => {
     if (!mapContainerRef.current) return
@@ -213,12 +233,12 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
         })
 
         // Add hover effects
-        marker.on('mouseover', function(this: L.Marker) {
-          this.setIcon(createCustomMarker(color, true))
+        marker.on('mouseover', () => {
+          marker.setIcon(createCustomMarker(color, true))
         })
 
-        marker.on('mouseout', function(this: L.Marker) {
-          this.setIcon(createCustomMarker(color, false))
+        marker.on('mouseout', () => {
+          marker.setIcon(createCustomMarker(color, false))
         })
 
         // Add click handler
@@ -262,8 +282,8 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
       mapRef.current.fitBounds(group.getBounds().pad(0.1))
     }
 
-    console.log(`Added ${outlets.length} outlets to map with custom styling`)
-  }, [outlets, showRadius])
+    logger.debug(`Added ${outlets.length} outlets to map with custom styling`)
+  }, [outlets, showRadius, getMarkerColor, createCustomMarker, onOutletClick, createPopupContent])
 
   // Handle selected outlet - show individual radius and highlight intersecting outlets
   useEffect(() => {
@@ -299,7 +319,7 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
     const intersectionInfo = intersectionData.get(selectedOutlet.id)
     if (intersectionInfo && intersectionInfo.hasIntersection) {
       // Add highlighted markers for intersecting outlets
-      intersectionInfo.intersectingOutlets.forEach((intersectingOutlet: any) => {
+             intersectionInfo.intersectingOutlets.forEach((intersectingOutlet: NeighborOutlet) => {
         const highlightMarker = L.marker([intersectingOutlet.latitude, intersectingOutlet.longitude], {
           icon: L.divIcon({
             html: `
@@ -351,4 +371,6 @@ export default function Map({ outlets, showRadius, intersectionData, loadingInte
       <div ref={mapContainerRef} className="map-container" />
     </div>
   )
-} 
+})
+
+export default Map 

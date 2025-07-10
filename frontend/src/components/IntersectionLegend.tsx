@@ -1,9 +1,13 @@
+import type { OutletIntersectionData } from '../types'
+
 interface IntersectionLegendProps {
-  intersectionData: Map<number, any>
+  intersectionData: Map<number, OutletIntersectionData>
   isVisible: boolean
 }
 
-export default function IntersectionLegend({ intersectionData, isVisible }: IntersectionLegendProps) {
+import { memo } from 'react'
+
+const IntersectionLegend = memo(function IntersectionLegend({ intersectionData, isVisible }: IntersectionLegendProps) {
   if (!isVisible) return null
 
   // Count intersecting vs isolated outlets
@@ -85,4 +89,6 @@ export default function IntersectionLegend({ intersectionData, isVisible }: Inte
       `}</style>
     </div>
   )
-} 
+})
+
+export default IntersectionLegend 
