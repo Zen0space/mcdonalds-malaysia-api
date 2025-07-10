@@ -15,13 +15,21 @@ interface MapControlsProps {
   onFiltersChange: (filters: FilterOptions) => void
   outletCount: number
   filteredCount: number
+  loadingIntersections?: boolean
+  intersectionData?: Map<number, any>
+  selectedOutlet?: any
+  onClearSelection?: () => void
 }
 
 export default function MapControls({ 
   filters, 
   onFiltersChange, 
   outletCount, 
-  filteredCount 
+  filteredCount,
+  loadingIntersections,
+  intersectionData,
+  selectedOutlet,
+  onClearSelection
 }: MapControlsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -51,6 +59,11 @@ export default function MapControls({
           <div className="outlet-counter">
             <span className="count-primary">{filteredCount}</span>
             <span className="count-secondary">/ {outletCount} outlets</span>
+            {loadingIntersections && (
+              <div className="loading-indicator">
+                <span className="loading-text">🔄 Calculating intersections...</span>
+              </div>
+            )}
           </div>
         </div>
         
@@ -62,6 +75,32 @@ export default function MapControls({
           {isExpanded ? '▼' : '▶'}
         </button>
       </div>
+
+      {/* Selected Outlet Card */}
+      {selectedOutlet && (
+        <div className="selected-outlet-card">
+          <div className="selected-outlet-header">
+            <div className="selected-outlet-icon">🎯</div>
+            <div className="selected-outlet-content">
+              <div className="selected-outlet-label">Selected Outlet</div>
+              <div className="selected-outlet-name">{selectedOutlet.name}</div>
+              {selectedOutlet.address && (
+                <div className="selected-outlet-address">{selectedOutlet.address}</div>
+              )}
+            </div>
+          </div>
+          {onClearSelection && (
+            <button 
+              onClick={onClearSelection}
+              className="clear-selection-button"
+              aria-label="Clear selection"
+            >
+              <span className="clear-icon">✕</span>
+              <span className="clear-text">Clear</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Expandable Controls */}
       {isExpanded && (
