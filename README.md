@@ -99,6 +99,7 @@ geolocation-mcdscraper/
    
    cd backend
    pip install -r requirements.txt
+   cd ..  # Return to root directory
    ```
 
 4. **Set up environment variables**
@@ -119,6 +120,20 @@ geolocation-mcdscraper/
    ```
 
 ### Running the Application
+
+#### Web Scraper (Data Collection)
+```bash
+# 1. Activate virtual environment first
+venv\Scripts\activate  # Windows
+# or
+source venv/bin/activate  # Linux/Mac
+
+# 2. Run the scraper from root directory (not backend directory)
+python scraper_runner.py
+
+# Note: The scraper will collect McDonald's outlet data and store it in the database
+# Make sure your .env file is configured with valid database credentials
+```
 
 #### Backend API (Current Status)
 ```bash

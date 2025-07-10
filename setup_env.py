@@ -10,7 +10,7 @@ def create_env_file():
     
     env_content = """# Database Configuration (FREE)
 # IMPORTANT: Use https:// URL format, NOT libsql:// for remote Turso databases
-TURSO_DATABASE_URL=https://mcd-scraper-tartnenas.aws-ap-northeast-1.turso.io
+TURSO_DATABASE_URL=https://your-database-name.turso.io
 TURSO_AUTH_TOKEN=your_turso_auth_token_here
 
 # Geocoding Service (FREE OPTIONS)
