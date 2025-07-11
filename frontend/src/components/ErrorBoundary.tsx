@@ -14,16 +14,45 @@ interface State {
   errorInfo?: ErrorInfo
 }
 
+/**
+ * Error boundary component that catches JavaScript errors anywhere in the child component tree.
+ * Provides a fallback UI and logs errors for debugging.
+ * Implements React's error boundary pattern for graceful error handling.
+ * 
+ * @class ErrorBoundary
+ * @extends {Component<Props, State>}
+ * 
+ * @example
+ * ```tsx
+ * <ErrorBoundary fallback={<div>Custom error UI</div>}>
+ *   <MyComponent />
+ * </ErrorBoundary>
+ * ```
+ */
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { hasError: false }
   }
 
+  /**
+   * Static method called when an error is thrown in a child component.
+   * Updates state to trigger error UI rendering.
+   * 
+   * @param {Error} error - The error that was thrown
+   * @returns {State} New state with error information
+   */
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error }
   }
 
+  /**
+   * Lifecycle method called when an error is caught.
+   * Logs the error and updates component state with error details.
+   * 
+   * @param {Error} error - The error that was thrown
+   * @param {ErrorInfo} errorInfo - Additional error information from React
+   */
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     logger.error('Error caught by boundary:', { error, errorInfo })
     this.setState({ errorInfo })

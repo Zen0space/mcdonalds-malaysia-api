@@ -67,13 +67,21 @@ geolocation-mcdscraper/
 - **Render** - Cloud hosting platform
 - **GitHub** - Version control and CI/CD
 
+## 📚 Documentation
+
+- **[Component Documentation](frontend/COMPONENTS.md)** - Detailed frontend component guide
+- **[Deployment Guide](DEPLOYMENT.md)** - Complete deployment instructions
+- **[API Documentation](http://localhost:8000/docs)** - Interactive API docs (when backend is running)
+- **[Project Todo](todo.md)** - Current project status and tasks
+
 ## 🔧 Getting Started
 
 ### Prerequisites
 
-- Python 3.11 installed
-- Node.js (for frontend)
-- Git
+- **Python 3.11** installed
+- **Node.js** (v18 or later) - Required for frontend
+- **Git** - Version control
+- **npm** - Comes with Node.js installation
 
 ### Installation
 
@@ -113,13 +121,83 @@ geolocation-mcdscraper/
    playwright install
    ```
 
-6. **Install frontend dependencies** (Phase 4 - Optional)
+6. **Install frontend dependencies**
    ```bash
-   cd ../frontend
+   cd frontend
    npm install
+   cd ..  # Return to root directory
    ```
+   
+   **Note**: The `dev.py` script will automatically install frontend dependencies if they're missing, so this step is optional.
 
 ### Running the Application
+
+#### 🚀 Quick Start with dev.py (Recommended)
+
+The easiest way to run both backend and frontend together:
+
+```bash
+# 1. Activate virtual environment
+venv\Scripts\activate  # Windows
+# or
+source venv/bin/activate  # Linux/Mac
+
+# 2. Run development servers
+python scripts/dev.py
+```
+
+**Expected Output:**
+```
+🔧 McDonald's Scraper Development Server
+==================================================
+🚀 Starting FastAPI backend server...
+INFO:     Uvicorn running on http://0.0.0.0:8000
+🎨 Starting React frontend server...
+📦 Installing frontend dependencies... (if needed)
+   ▲ Next.js 15.1.3
+   - Local:        http://localhost:3000
+
+✅ Development servers started!
+🔗 Backend API: http://localhost:8000
+📚 API Docs: http://localhost:8000/docs
+🎨 Frontend: http://localhost:3000
+
+⌨️  Press Ctrl+C to stop all servers
+```
+
+#### 📋 Prerequisites for dev.py
+
+Before running `dev.py`, ensure you have:
+
+1. **Python 3.11** with virtual environment activated
+2. **Node.js** installed (check with `node --version`)
+3. **npm** available (check with `npm --version`)
+4. **Backend dependencies** installed (`pip install -r backend/requirements.txt`)
+5. **Environment variables** configured (copy `env.example` to `backend/.env`)
+
+#### 🛠️ Troubleshooting dev.py
+
+**"No module named uvicorn"**
+```bash
+# Make sure you're in the virtual environment
+venv\Scripts\activate  # Windows
+cd backend
+pip install -r requirements.txt
+```
+
+**"npm not found"**
+```bash
+# Install Node.js from https://nodejs.org/
+# Or use Windows Package Manager:
+winget install OpenJS.NodeJS
+```
+
+**Frontend dependencies missing**
+```bash
+# The script will auto-install, but you can do it manually:
+cd frontend
+npm install
+```
 
 #### Web Scraper (Data Collection)
 ```bash
@@ -135,7 +213,11 @@ python scraper_runner.py
 # Make sure your .env file is configured with valid database credentials
 ```
 
-#### Backend API (Current Status)
+#### Manual Setup (Alternative)
+
+If you prefer to run servers separately:
+
+**Backend API**
 ```bash
 # 1. Activate virtual environment first
 venv\Scripts\activate  # Windows
@@ -149,17 +231,11 @@ cd backend
 python main.py
 ```
 
-#### Frontend (Phase 4 - Optional)
+**Frontend**
 ```bash
 # In a new terminal window
 cd frontend
 npm run dev
-```
-
-#### Full Stack Development (Alternative)
-```bash
-# After both backend and frontend are set up
-python scripts/dev.py
 ```
 
 ### Access Points

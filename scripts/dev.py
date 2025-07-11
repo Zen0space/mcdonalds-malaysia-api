@@ -14,13 +14,12 @@ def run_backend():
     """Run the FastAPI backend server"""
     print("🚀 Starting FastAPI backend server...")
     backend_dir = Path(__file__).parent.parent / "backend"
-    os.chdir(backend_dir)
     
-    # Run with Python 3.11
+    # Use the current Python executable (from venv)
     return subprocess.Popen([
-        "py", "-3.11", "-m", "uvicorn", "main:app", 
+        sys.executable, "-m", "uvicorn", "main:app", 
         "--reload", "--host", "0.0.0.0", "--port", "8000"
-    ])
+    ], cwd=backend_dir)
 
 def run_frontend():
     """Run the React/Next.js frontend server"""
@@ -31,14 +30,28 @@ def run_frontend():
         print("⚠️  Frontend directory not found. Run Phase 4 setup first.")
         return None
     
-    os.chdir(frontend_dir)
-    
     # Check if package.json exists
     if not (frontend_dir / "package.json").exists():
         print("⚠️  Frontend not initialized. Run Phase 4 setup first.")
         return None
     
-    return subprocess.Popen(["npm", "run", "dev"])
+    # Check if npm is available (use shell=True on Windows)
+    try:
+        subprocess.run(["npm", "--version"], check=True, capture_output=True, cwd=frontend_dir, shell=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("⚠️  npm not found. Please install Node.js first.")
+        return None
+    
+    # Check if node_modules exists
+    if not (frontend_dir / "node_modules").exists():
+        print("📦 Installing frontend dependencies...")
+        try:
+            subprocess.run(["npm", "install"], check=True, cwd=frontend_dir, shell=True)
+        except subprocess.CalledProcessError:
+            print("❌ Failed to install frontend dependencies")
+            return None
+    
+    return subprocess.Popen(["npm", "run", "dev"], cwd=frontend_dir, shell=True)
 
 def main():
     """Main function to run both servers"""

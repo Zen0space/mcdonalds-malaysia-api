@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { OutletIntersectionData } from '../types'
 
 interface IntersectionLegendProps {
@@ -5,8 +6,25 @@ interface IntersectionLegendProps {
   isVisible: boolean
 }
 
-import { memo } from 'react'
-
+/**
+ * Visual legend component that displays intersection analysis information.
+ * Shows color-coded legend for intersecting vs isolated outlets with counts.
+ * Positioned as a floating overlay on the map with responsive design.
+ * Optimized with React.memo for performance.
+ * 
+ * @param {IntersectionLegendProps} props - Component props
+ * @param {Map<number, OutletIntersectionData>} props.intersectionData - Map of outlet intersection data
+ * @param {boolean} props.isVisible - Whether the legend should be visible
+ * @returns {JSX.Element | null} Legend component or null if not visible
+ * 
+ * @example
+ * ```tsx
+ * <IntersectionLegend 
+ *   intersectionData={intersectionMap} 
+ *   isVisible={showLegend} 
+ * />
+ * ```
+ */
 const IntersectionLegend = memo(function IntersectionLegend({ intersectionData, isVisible }: IntersectionLegendProps) {
   if (!isVisible) return null
 

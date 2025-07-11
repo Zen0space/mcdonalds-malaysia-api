@@ -8,6 +8,22 @@ interface LoadingSpinnerProps {
   className?: string
 }
 
+/**
+ * Reusable loading spinner component with customizable size and message.
+ * Features McDonald's brand colors and smooth animations.
+ * Optimized with React.memo for performance.
+ * 
+ * @param {LoadingSpinnerProps} props - Component props
+ * @param {'small' | 'medium' | 'large'} props.size - Size variant of the spinner
+ * @param {string} props.message - Optional loading message to display
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element} Loading spinner component
+ * 
+ * @example
+ * ```tsx
+ * <LoadingSpinner size="large" message="Loading outlets..." />
+ * ```
+ */
 const LoadingSpinner = memo(function LoadingSpinner({ 
   size = 'medium', 
   message = 'Loading...', 
