@@ -8,6 +8,9 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { isWithinRadius, calculateDistance, MAP_CONFIG } from '../utils/distance'
 import { logger } from '../utils/logger'
+import { FloatingChatbot } from '../components/chat'
+
+
 import type {
   Outlet,
   NeighborOutlet,
@@ -261,6 +264,16 @@ export default function Home() {
           selectedOutlet={selectedOutlet}
         />
       </div>
+      
+      {/* Floating Chatbot - Outside app-container to avoid overflow:hidden clipping */}
+      <FloatingChatbot />
+      
+      {/* System Diagnostics - Development Tool */}
+      <div className="fixed top-4 right-4 z-50">
+        
+      </div>
+      
+
     </ErrorBoundary>
   )
 } 
