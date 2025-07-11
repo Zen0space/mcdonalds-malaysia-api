@@ -37,35 +37,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
     }
   };
 
-  const handleQuickAction = (action: string) => {
-    if (!isLoading && !disabled) {
-      onSendMessage(action);
-    }
-  };
-
-  const quickActions = [
-    'Find nearest McDonald&apos;s',
-    'Menu items',
-    'Operating hours',
-    'Contact info'
-  ];
-
   return (
     <div className="border-t border-gray-200 bg-white p-4 rounded-b-2xl">
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-2 mb-3">
-        {quickActions.map((action, index) => (
-          <button
-            key={index}
-            onClick={() => handleQuickAction(action)}
-            disabled={isLoading || disabled}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {action}
-          </button>
-        ))}
-      </div>
-
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="flex gap-2 items-center">
         {/* Clear Chat Button */}
