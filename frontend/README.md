@@ -37,30 +37,25 @@ npm install
 yarn install
 ```
 
-### 3. Environment Setup
+### 3. Frontend Environment Setup
 Create a `.env.local` file in the frontend directory:
 ```bash
 # Copy the example environment file
 cp env.example .env.local
 ```
 
-Edit `.env.local` with your configuration:
+Edit `.env.local` with your configuration (usually no changes needed):
 ```env
 # Backend API Configuration
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
-# Map Configuration
+# Map Configuration (optional)
 NEXT_PUBLIC_MAP_CENTER_LAT=3.1570
 NEXT_PUBLIC_MAP_CENTER_LNG=101.7123
 NEXT_PUBLIC_MAP_ZOOM=11
-
-# Application Configuration
-NEXT_PUBLIC_APP_NAME=McDonald's Malaysia Map
-NEXT_PUBLIC_APP_DESCRIPTION=Find McDonald's outlets in Malaysia
-
-# Development Configuration
-NODE_ENV=development
 ```
+
+**Note**: Main environment variables (Gemini API key, database config) are configured in the project root directory. See the [main README](../README.md) for complete environment setup instructions.
 
 ## 🚀 Quick Start
 
@@ -162,7 +157,7 @@ frontend/
 
 ## 🔧 Configuration
 
-### Environment Variables
+### Frontend Environment Variables
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
@@ -476,8 +471,9 @@ lighthouse http://localhost:3000
 ### Getting Help
 1. **Check Console**: Browser DevTools for error messages
 2. **Verify Backend**: Ensure backend API is running
-3. **Check Environment**: Verify `.env.local` configuration
-4. **Test Location**: Ensure location permissions are granted
+3. **Main README**: See [project root README](../README.md) for main environment setup
+4. **Check Environment**: Verify `.env.local` configuration
+5. **Test Location**: Ensure location permissions are granted
 
 ### Contributing
 1. Fork the repository

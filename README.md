@@ -44,6 +44,8 @@ geolocation-mcdscraper/
 │   └── README.md            # Frontend installation guide
 ├── scripts/                   # Development utilities
 ├── shared/                    # Shared configurations
+├── .env                      # Environment variables (create from env.example)
+├── env.example               # Environment template
 └── README.md                 # This file - main installation guide
 ```
 
@@ -81,7 +83,17 @@ git clone <repository-url>
 cd geolocation-mcdscraper
 ```
 
-### 2. Backend Setup
+### 2. Environment Setup (Root Directory)
+```bash
+# Set up environment variables in project root
+cp env.example .env
+
+# Edit .env with your configuration
+# Required: Add your Gemini API key
+# Optional: Add Turso database credentials
+```
+
+### 3. Backend Setup
 ```bash
 # Navigate to backend directory
 cd backend
@@ -101,10 +113,6 @@ pip install -r requirements.txt
 # Install Playwright browsers
 playwright install
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your Gemini API key
-
 # Run database migration
 python migrate_db.py
 
@@ -116,7 +124,7 @@ The backend will be available at:
 - **API**: http://localhost:8000
 - **Documentation**: http://localhost:8000/docs
 
-### 3. Frontend Setup
+### 4. Frontend Setup
 ```bash
 # Open a new terminal and navigate to frontend
 cd frontend
@@ -124,9 +132,9 @@ cd frontend
 # Install Node.js dependencies
 npm install
 
-# Set up environment variables
+# Set up frontend environment variables
 cp env.example .env.local
-# Edit .env.local with backend URL
+# Edit .env.local with backend URL (usually no changes needed)
 
 # Start the development server
 npm run dev
@@ -135,7 +143,7 @@ npm run dev
 The frontend will be available at:
 - **Application**: http://localhost:3000
 
-### 4. Access the Application
+### 5. Access the Application
 1. **Open your browser** to http://localhost:3000
 2. **Allow location permissions** when prompted
 3. **Explore the map** with McDonald's outlets
@@ -193,19 +201,22 @@ npm run dev
 
 ## 🔧 Configuration
 
-### Required Environment Variables
+### Environment Variables (Root Directory)
 
-#### Backend (`.env`)
+#### Main Environment File (`.env`)
 ```env
 # Required for chatbot functionality
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Optional database configuration
+# Optional database configuration (uses local SQLite if not provided)
 TURSO_DATABASE_URL=your_turso_url_here
 TURSO_AUTH_TOKEN=your_turso_token_here
+
+# Optional development settings
+DEBUG=true
 ```
 
-#### Frontend (`.env.local`)
+#### Frontend Environment (`.env.local`)
 ```env
 # Required for API communication
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
@@ -220,7 +231,12 @@ NEXT_PUBLIC_MAP_CENTER_LNG=101.7123
 #### Gemini API Key (Required for Chatbot)
 1. Visit [Google AI Studio](https://aistudio.google.com/)
 2. Create a new API key
-3. Add it to `backend/.env` as `GEMINI_API_KEY`
+3. Add it to **root directory** `.env` as `GEMINI_API_KEY`
+
+#### Turso Database (Optional - uses local SQLite if not provided)
+1. Visit [Turso](https://turso.tech/)
+2. Create a database and get URL and auth token
+3. Add to **root directory** `.env` as `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`
 
 ## 🧪 Testing the Application
 
@@ -248,15 +264,19 @@ curl -X POST "http://localhost:8000/api/chat/sessions" \
 
 ## 🚨 Common Issues & Solutions
 
+### Environment Issues
+- **Missing .env file**: Copy `env.example` to `.env` in **root directory**
+- **API key errors**: Verify `GEMINI_API_KEY` in **root directory** `.env`
+- **Path issues**: Ensure `.env` is in project root, not backend folder
+
 ### Backend Issues
 - **Import errors**: Ensure virtual environment is activated
 - **Database errors**: Run `python migrate_db.py`
-- **API key errors**: Verify `GEMINI_API_KEY` in `.env`
 - **Port conflicts**: Backend uses port 8000
 
 ### Frontend Issues
 - **Build errors**: Run `npm install` and check Node.js version
-- **API connection**: Verify `NEXT_PUBLIC_API_BASE_URL` in `.env.local`
+- **API connection**: Verify `NEXT_PUBLIC_API_BASE_URL` in `frontend/.env.local`
 - **Map not loading**: Check browser console for errors
 - **Location issues**: Ensure HTTPS or localhost for geolocation
 
@@ -325,7 +345,7 @@ npm run type-check         # TypeScript validation
    - [Backend README](backend/README.md) for API issues
    - [Frontend README](frontend/README.md) for UI issues
 2. **Check browser console** for error messages
-3. **Verify environment variables** are set correctly
+3. **Verify environment variables** are set correctly in **root directory**
 4. **Ensure both services are running** on correct ports
 
 ### Troubleshooting Resources
