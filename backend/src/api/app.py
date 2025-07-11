@@ -11,6 +11,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 from .routes import router
+from .chat_routes import chat_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,9 +21,10 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="McDonald's Malaysia API",
     description="""
-    🍟 **McDonald's Malaysia Outlet API**
+    🍟 **McDonald's Malaysia Outlet API & AI Chatbot**
     
-    A comprehensive RESTful API providing McDonald's outlet locations, coordinates, and details for Kuala Lumpur.
+    A comprehensive RESTful API providing McDonald's outlet locations, coordinates, and details for Kuala Lumpur, 
+    plus an intelligent AI chatbot powered by Google Gemini 2.5 Flash.
     
     ## 🚀 Features
     
@@ -30,6 +32,8 @@ app = FastAPI(
     * **🔍 Text Search**: Search outlets by name or address
     * **📍 Nearby Search**: Find outlets within 5km radius using GPS coordinates
     * **🏷️ Feature Filtering**: Filter by outlet features (24hrs, Drive-Thru, McCafe)
+    * **🤖 AI Chatbot**: Intelligent assistant powered by Google Gemini 2.5 Flash
+    * **💬 Natural Language**: Ask questions in English or Bahasa Malaysia
     * **📊 Statistics**: Database and coverage statistics
     * **⚡ Fast**: Optimized for quick responses with response time headers
     * **🆓 Free**: No authentication required
@@ -63,6 +67,20 @@ app = FastAPI(
     GET /api/v1/outlets/nearby?latitude=3.1570&longitude=101.7123&radius=2
     # Find outlets within 2km of KLCC
     ```
+    
+    ### AI Chatbot (NEW!)
+    ```
+    POST /api/v1/chat/session                    # Create chat session
+    POST /api/v1/chat/message                    # Send message to AI
+    GET /api/v1/chat/history/{session_id}        # Get chat history
+    ```
+    
+    **Example Chat Messages:**
+    - "Find nearest McDonald's"
+    - "McDonald's near KLCC"
+    - "24-hour McDonald's"
+    - "What time does McDonald's open?"
+    - "Directions to McDonald's"
     
     ## 📊 Data Quality
     
@@ -124,7 +142,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Public API - allow all origins
     allow_credentials=False,  # No authentication required
-    allow_methods=["GET"],  # Only GET methods for read-only API
+    allow_methods=["GET", "POST", "DELETE"],  # GET for outlets, POST/DELETE for chat
     allow_headers=["*"],
 )
 
@@ -164,6 +182,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 # Include API routes
 app.include_router(router)
+app.include_router(chat_router)
 
 # Root endpoint - redirect to docs
 @app.get("/", include_in_schema=False)

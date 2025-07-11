@@ -426,3 +426,6 @@ production_data_*.json
 # Database exports with real data
 database_export_*.sql
 real_outlets_*.csv 
+
+
+geminichat-todo.md

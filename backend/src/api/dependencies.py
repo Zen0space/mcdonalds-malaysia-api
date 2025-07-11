@@ -13,6 +13,7 @@ from libsql_client import ClientSync
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from src.database.connection import get_db_client
+from src.database.operations import DatabaseOperations
 
 
 def get_database() -> Generator[ClientSync, None, None]:
@@ -27,6 +28,16 @@ def get_database() -> Generator[ClientSync, None, None]:
         yield client
     except Exception as e:
         raise RuntimeError(f"Database connection failed: {e}")
+
+
+def get_database_operations() -> DatabaseOperations:
+    """
+    Database operations dependency for chat service.
+    
+    Returns:
+        DatabaseOperations: Database operations instance
+    """
+    return DatabaseOperations()
 
 
 # Dependency for FastAPI routes

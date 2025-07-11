@@ -1,395 +1,353 @@
-# McDonald's Malaysia Scraper Project
+# McDonald's Malaysia - Interactive Map & Chatbot
 
-A comprehensive web scraping and data visualization project that extracts McDonald's Malaysia outlet information, adds geocoding, and provides a full-stack web application with chatbot integration.
+A comprehensive full-stack application that provides an interactive map interface and intelligent chatbot for finding McDonald's outlets in Malaysia. Features real-time location detection, outlet search, and AI-powered recommendations.
 
 ## 🎯 Project Overview
 
-This project scrapes McDonald's Malaysia outlet data from their official website, enriches it with geographical coordinates, and serves it through a modern web application with visualization and chatbot features.
+This project combines web scraping, geocoding, interactive mapping, and AI chatbot technology to create a complete solution for finding McDonald's outlets in Malaysia.
 
-### Features
+### ✨ Key Features
 
-- **🕷️ Web Scraping**: Automated scraping of McDonald's Malaysia outlet data (✅ Complete)
-- **🗺️ Geocoding**: Address-to-coordinates conversion with 100% success rate (✅ Complete)
-- **🚀 Enhanced FastAPI Backend**: Professional RESTful API with advanced search & filtering (✅ Complete)
-- **📍 GPS-Based Search**: Find nearby outlets using Haversine distance calculation (✅ Complete)
-- **🎨 React Frontend**: Modern web interface with interactive maps (🚧 Phase 4)
-- **📊 Data Visualization**: Charts and analytics dashboard (🚧 Phase 4)
-- **🤖 Chatbot Integration**: AI-powered outlet recommendations and queries (🚧 Phase 5)
+- **🗺️ Interactive Map**: Leaflet.js powered map with custom McDonald's markers
+- **🤖 Intelligent Chatbot**: Gemini 2.5 Flash powered AI assistant
+- **📍 Location Services**: Automatic GPS detection and location-based search
+- **🔍 Advanced Search**: Find outlets by name, address, or proximity
+- **📱 Mobile Responsive**: Optimized for desktop and mobile devices
+- **🎨 Modern UI/UX**: Clean design with McDonald's brand colors
+- **⚡ Real-time Data**: Live outlet information with operating hours
+- **🧭 Navigation**: Direct Waze integration for turn-by-turn directions
 
 ## 🏗️ Architecture
 
-**Monorepo Structure** (Single Repository, No Docker)
+**Full-Stack Application Structure**
 
 ```
 geolocation-mcdscraper/
 ├── backend/                    # Python FastAPI backend
 │   ├── src/
+│   │   ├── api/               # REST API endpoints
+│   │   ├── chatbot/           # AI chatbot with Gemini
+│   │   ├── database/          # SQLite/Turso operations
 │   │   ├── scraper/           # Web scraping modules
-│   │   ├── database/          # Database operations
-│   │   ├── geocoding/         # Geocoding services
-│   │   ├── api/              # API endpoints
-│   │   └── chatbot/          # Chatbot logic
-│   ├── tests/
-│   ├── requirements.txt
-│   └── main.py
+│   │   └── geocoding/         # Location services
+│   ├── main.py                # Backend entry point
+│   ├── requirements.txt       # Python dependencies
+│   └── README.md             # Backend installation guide
 ├── frontend/                   # React/Next.js frontend
 │   ├── src/
-│   │   ├── components/       # UI components
-│   │   ├── pages/           # Application pages
-│   │   ├── services/        # API integration
-│   │   └── chatbot/         # Chat interface
-│   ├── package.json
-│   └── next.config.js
-├── shared/                     # Shared utilities
-├── scripts/                    # Development scripts
-└── todo.md                    # Project checklist
+│   │   ├── app/              # Next.js App Router
+│   │   ├── components/       # React components
+│   │   ├── hooks/            # Custom React hooks
+│   │   ├── services/         # API integration
+│   │   └── types/            # TypeScript definitions
+│   ├── package.json          # Node.js dependencies
+│   └── README.md            # Frontend installation guide
+├── scripts/                   # Development utilities
+├── shared/                    # Shared configurations
+└── README.md                 # This file - main installation guide
 ```
 
 ## 🚀 Tech Stack
 
-### Backend ✅
-- **Python 3.11** - Programming language
-- **FastAPI** - Web framework with dependency injection
-- **Turso (LibSQL)** - Cloud SQLite database
-- **Playwright** - JavaScript-capable web scraping
-- **Nominatim + Waze** - Geocoding services (100% free)
-- **Pydantic** - Data validation and serialization
-- **Google Gemini** - Chatbot integration (planned)
+### Backend
+- **Python 3.11+** with FastAPI framework
+- **Google Gemini 2.5 Flash** for AI chatbot
+- **SQLite/Turso** for data storage
+- **Playwright** for web scraping
+- **Nominatim** for geocoding services
 
 ### Frontend
-- **React/Next.js** - Web framework
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **React Leaflet** - Interactive maps (React-friendly)
-- **Chart.js** - Data visualization
+- **React 18** with Next.js 15
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Leaflet.js** for interactive maps
+- **Custom hooks** for state management
 
-### Deployment
-- **Render** - Cloud hosting platform
-- **GitHub** - Version control and CI/CD
+## 📋 Prerequisites
 
-## 📚 Documentation
+Before you begin, ensure you have the following installed:
 
-- **[Component Documentation](frontend/COMPONENTS.md)** - Detailed frontend component guide
-- **[Deployment Guide](DEPLOYMENT.md)** - Complete deployment instructions
-- **[API Documentation](http://localhost:8000/docs)** - Interactive API docs (when backend is running)
-- **[Project Todo](todo.md)** - Current project status and tasks
+- **Python 3.8+** (Recommended: Python 3.11+)
+- **Node.js 18+** (Recommended: Node.js 20+)
+- **npm** or **yarn** package manager
+- **Git** for version control
+- **Modern web browser** with geolocation support
 
-## 🔧 Getting Started
+## 🛠️ Quick Installation Guide
 
-### Prerequisites
-
-- **Python 3.11** installed
-- **Node.js** (v18 or later) - Required for frontend
-- **Git** - Version control
-- **npm** - Comes with Node.js installation
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/geolocation-mcdscraper.git
-   cd geolocation-mcdscraper
-   ```
-
-2. **Set up Python 3.11 virtual environment**
-   ```bash
-   py -3.11 -m venv venv
-   venv\Scripts\activate  # Windows
-   # or
-   source venv/bin/activate  # Linux/Mac
-   ```
-
-3. **Install backend dependencies**
-   ```bash
-   # Make sure virtual environment is activated first
-   # venv\Scripts\activate  # Windows
-   # source venv/bin/activate  # Linux/Mac
-   
-   cd backend
-   pip install -r requirements.txt
-   cd ..  # Return to root directory
-   ```
-
-4. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   # Edit .env with your actual API keys and database credentials
-   ```
-
-5. **Install Playwright browsers (for web scraping)**
-   ```bash
-   playwright install
-   ```
-
-6. **Install frontend dependencies**
-   ```bash
-   cd frontend
-   npm install
-   cd ..  # Return to root directory
-   ```
-   
-   **Note**: The `dev.py` script will automatically install frontend dependencies if they're missing, so this step is optional.
-
-### Running the Application
-
-#### 🚀 Quick Start with dev.py (Recommended)
-
-The easiest way to run both backend and frontend together:
-
+### 1. Clone the Repository
 ```bash
-# 1. Activate virtual environment
-venv\Scripts\activate  # Windows
-# or
-source venv/bin/activate  # Linux/Mac
-
-# 2. Run development servers
-python scripts/dev.py
+git clone <repository-url>
+cd geolocation-mcdscraper
 ```
 
-**Expected Output:**
-```
-🔧 McDonald's Scraper Development Server
-==================================================
-🚀 Starting FastAPI backend server...
-INFO:     Uvicorn running on http://0.0.0.0:8000
-🎨 Starting React frontend server...
-📦 Installing frontend dependencies... (if needed)
-   ▲ Next.js 15.1.3
-   - Local:        http://localhost:3000
-
-✅ Development servers started!
-🔗 Backend API: http://localhost:8000
-📚 API Docs: http://localhost:8000/docs
-🎨 Frontend: http://localhost:3000
-
-⌨️  Press Ctrl+C to stop all servers
-```
-
-#### 📋 Prerequisites for dev.py
-
-Before running `dev.py`, ensure you have:
-
-1. **Python 3.11** with virtual environment activated
-2. **Node.js** installed (check with `node --version`)
-3. **npm** available (check with `npm --version`)
-4. **Backend dependencies** installed (`pip install -r backend/requirements.txt`)
-5. **Environment variables** configured (copy `env.example` to `backend/.env`)
-
-#### 🛠️ Troubleshooting dev.py
-
-**"No module named uvicorn"**
+### 2. Backend Setup
 ```bash
-# Make sure you're in the virtual environment
-venv\Scripts\activate  # Windows
+# Navigate to backend directory
 cd backend
+
+# Create and activate virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# Install Python dependencies
 pip install -r requirements.txt
-```
 
-**"npm not found"**
-```bash
-# Install Node.js from https://nodejs.org/
-# Or use Windows Package Manager:
-winget install OpenJS.NodeJS
-```
+# Install Playwright browsers
+playwright install
 
-**Frontend dependencies missing**
-```bash
-# The script will auto-install, but you can do it manually:
-cd frontend
-npm install
-```
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your Gemini API key
 
-#### Web Scraper (Data Collection)
-```bash
-# 1. Activate virtual environment first
-venv\Scripts\activate  # Windows
-# or
-source venv/bin/activate  # Linux/Mac
+# Run database migration
+python migrate_db.py
 
-# 2. Run the scraper from root directory (not backend directory)
-python scraper_runner.py
-
-# Note: The scraper will collect McDonald's outlet data and store it in the database
-# Make sure your .env file is configured with valid database credentials
-```
-
-#### Manual Setup (Alternative)
-
-If you prefer to run servers separately:
-
-**Backend API**
-```bash
-# 1. Activate virtual environment first
-venv\Scripts\activate  # Windows
-# or
-source venv/bin/activate  # Linux/Mac
-
-# 2. Navigate to backend directory
-cd backend
-
-# 3. Start the API server
+# Start the backend server
 python main.py
 ```
 
-**Frontend**
+The backend will be available at:
+- **API**: http://localhost:8000
+- **Documentation**: http://localhost:8000/docs
+
+### 3. Frontend Setup
 ```bash
-# In a new terminal window
+# Open a new terminal and navigate to frontend
+cd frontend
+
+# Install Node.js dependencies
+npm install
+
+# Set up environment variables
+cp env.example .env.local
+# Edit .env.local with backend URL
+
+# Start the development server
+npm run dev
+```
+
+The frontend will be available at:
+- **Application**: http://localhost:3000
+
+### 4. Access the Application
+1. **Open your browser** to http://localhost:3000
+2. **Allow location permissions** when prompted
+3. **Explore the map** with McDonald's outlets
+4. **Try the chatbot** by clicking the floating chat button
+5. **Ask questions** like "Find McDonald's near me"
+
+## 📚 Detailed Installation Guides
+
+For comprehensive setup instructions, troubleshooting, and advanced configuration:
+
+### 🔧 Backend Setup
+**📖 [Backend README](backend/README.md)**
+- Complete Python environment setup
+- Gemini API key configuration
+- Database setup and migration
+- API endpoint documentation
+- Chatbot configuration
+- Troubleshooting guide
+
+### 🎨 Frontend Setup
+**📖 [Frontend README](frontend/README.md)**
+- Node.js environment setup
+- React/Next.js configuration
+- Map component setup
+- Chat interface configuration
+- Mobile optimization
+- Performance tuning
+
+## 🚀 Development Workflow
+
+### 1. Start Both Services
+```bash
+# Terminal 1 - Backend
+cd backend
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+python main.py
+
+# Terminal 2 - Frontend
 cd frontend
 npm run dev
 ```
 
-### Access Points
-
+### 2. Development URLs
+- **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
-- **API Documentation (Swagger)**: http://localhost:8000/docs
-- **API Documentation (ReDoc)**: http://localhost:8000/redoc
-- **Frontend**: http://localhost:3000 (Phase 4)
+- **API Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
 
-## 📋 Development Phases
+### 3. Testing the Integration
+1. **Map functionality**: Verify outlets appear on the map
+2. **Location services**: Test GPS detection
+3. **Chatbot**: Send messages and verify responses
+4. **API integration**: Check network requests in browser DevTools
 
-### ✅ Phase 1: Web Scraping & Database (Days 1-3) - COMPLETE
-- [x] Project setup and structure
-- [x] Database schema creation with Turso (LibSQL)
-- [x] Playwright-based web scraping implementation
-- [x] Data storage and validation (50 KL outlets)
-- [x] Comprehensive deduplication and error handling
+## 🔧 Configuration
 
-### ✅ Phase 2: Geocoding Enhancement (Days 4-5) - COMPLETE
-- [x] Dual geocoding service integration (Waze + Nominatim)
-- [x] Address processing and coordinate retrieval (100% success rate)
-- [x] Database updates with geographical data
-- [x] GPS coordinate validation for Malaysia bounds
+### Required Environment Variables
 
-### ✅ Phase 3: Enhanced API Development (Days 6-8) - COMPLETE
-- [x] Professional FastAPI endpoints with dependency injection
-- [x] Advanced search, filtering, and GPS-based nearby search
-- [x] Comprehensive API documentation with examples
-- [x] Request logging, response timing, and performance optimization
-- [x] Production-ready error handling and validation
-
-### 🎨 Phase 4: Frontend Development (Days 9-12) - IN PROGRESS
-- [x] React/Next.js setup with TypeScript
-- [x] Interactive maps with React Leaflet
-- [x] Modern UI/UX design with custom styling
-- [x] API integration with backend
-- [x] McDonald's outlet visualization with custom markers
-- [x] 5KM radius intersection analysis
-- [x] Advanced filtering and search functionality
-- [x] Error boundaries and loading states
-- [x] Production build optimization
-
-### 🤖 Phase 5: Chatbot Integration (Days 13-15)
-- [ ] Chatbot backend development
-- [ ] AI integration (OpenAI API)
-- [ ] Chat interface frontend
-- [ ] Intelligent outlet recommendations
-
-### 🚀 Deployment (Days 16-18)
-- [ ] Production deployment to Render
-- [ ] Environment configuration
-- [ ] Monitoring and maintenance
-
-## 🗄️ Database Schema
-
-```sql
-CREATE TABLE outlets (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    address TEXT NOT NULL,
-    operating_hours TEXT,
-    waze_link TEXT,
-    latitude REAL,
-    longitude REAL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-## 🔑 Environment Variables
-
-Copy `env.example` to `.env` and configure:
-
+#### Backend (`.env`)
 ```env
-# Database
-TURSO_DATABASE_URL=your_database_url
-TURSO_AUTH_TOKEN=your_auth_token
+# Required for chatbot functionality
+GEMINI_API_KEY=your_gemini_api_key_here
 
-# Geocoding (choose one)
-GOOGLE_MAPS_API_KEY=your_google_api_key
-GEOAPIFY_API_KEY=your_geoapify_api_key
-
-# Chatbot
-OPENAI_API_KEY=your_openai_api_key
-
-# Development
-DEBUG=true
-NEXT_PUBLIC_API_URL=http://localhost:8000
+# Optional database configuration
+TURSO_DATABASE_URL=your_turso_url_here
+TURSO_AUTH_TOKEN=your_turso_token_here
 ```
 
-## 🧪 Testing
+#### Frontend (`.env.local`)
+```env
+# Required for API communication
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
+# Optional map configuration
+NEXT_PUBLIC_MAP_CENTER_LAT=3.1570
+NEXT_PUBLIC_MAP_CENTER_LNG=101.7123
+```
+
+### Getting API Keys
+
+#### Gemini API Key (Required for Chatbot)
+1. Visit [Google AI Studio](https://aistudio.google.com/)
+2. Create a new API key
+3. Add it to `backend/.env` as `GEMINI_API_KEY`
+
+## 🧪 Testing the Application
+
+### 1. Backend Testing
 ```bash
-# Backend tests
-# 1. Activate virtual environment
-venv\Scripts\activate  # Windows
-# or
-source venv/bin/activate  # Linux/Mac
-
-# 2. Run backend tests
 cd backend
-python -m pytest
 
-# Frontend tests
-cd frontend
-npm test
+# Test health endpoint
+curl http://localhost:8000/health
 
-# Integration tests
-python scripts/test.py
+# Test outlets endpoint
+curl "http://localhost:8000/api/outlets/nearby?lat=3.1570&lng=101.7123"
+
+# Test chat endpoint
+curl -X POST "http://localhost:8000/api/chat/sessions" \
+  -H "Content-Type: application/json"
 ```
 
-## 📚 API Documentation
+### 2. Frontend Testing
+1. **Open browser** to http://localhost:3000
+2. **Check map loading** - verify McDonald's markers appear
+3. **Test location services** - allow location permission
+4. **Test chatbot** - send a message like "Find McDonald's near me"
+5. **Test responsive design** - resize browser window
 
-Once the backend is running, visit:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+## 🚨 Common Issues & Solutions
 
-### Key API Endpoints (v1)
+### Backend Issues
+- **Import errors**: Ensure virtual environment is activated
+- **Database errors**: Run `python migrate_db.py`
+- **API key errors**: Verify `GEMINI_API_KEY` in `.env`
+- **Port conflicts**: Backend uses port 8000
 
-- `GET /api/v1/` - 🍟 API information and metadata
-- `GET /api/v1/health` - 💚 Health check with database status
-- `GET /api/v1/outlets` - 🏪 List/search/filter outlets with pagination
-- `GET /api/v1/outlets/{id}` - 🏪 Get specific outlet details
-- `GET /api/v1/outlets/nearby` - 📍 GPS-based proximity search
-- `GET /api/v1/stats` - 📊 Database statistics
-- `POST /chat/message` - 🤖 Chatbot interaction (Phase 5)
+### Frontend Issues
+- **Build errors**: Run `npm install` and check Node.js version
+- **API connection**: Verify `NEXT_PUBLIC_API_BASE_URL` in `.env.local`
+- **Map not loading**: Check browser console for errors
+- **Location issues**: Ensure HTTPS or localhost for geolocation
+
+### Integration Issues
+- **CORS errors**: Backend has CORS configured for localhost:3000
+- **Chat not working**: Ensure backend is running and accessible
+- **No outlet data**: Check if database has been populated
+
+## 🔄 Development Scripts
+
+### Backend Scripts
+```bash
+cd backend
+python main.py              # Start development server
+python migrate_db.py        # Run database migration
+python -m pytest           # Run tests (if available)
+```
+
+### Frontend Scripts
+```bash
+cd frontend
+npm run dev                 # Start development server
+npm run build              # Build for production
+npm run start              # Start production server
+npm run lint               # Check code quality
+npm run type-check         # TypeScript validation
+```
+
+## 📊 Project Status
+
+### ✅ Completed Features
+- **Backend API**: Complete with all endpoints
+- **Database**: SQLite with migration support
+- **Chatbot**: Gemini 2.5 Flash integration
+- **Frontend**: React/Next.js application
+- **Map Interface**: Interactive Leaflet map
+- **Location Services**: GPS integration
+- **Chat Interface**: Real-time messaging
+- **Mobile Support**: Responsive design
+
+### 🚧 Future Enhancements
+- **Offline Support**: PWA capabilities
+- **Advanced Analytics**: Usage statistics
+- **Multi-language**: Bahasa Malaysia support
+- **Push Notifications**: Real-time updates
+- **Social Features**: Share locations
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests
-5. Submit a pull request
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/new-feature`
+3. **Follow the development workflow**
+4. **Test thoroughly** on both frontend and backend
+5. **Submit a pull request**
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- McDonald's Malaysia for providing the data source
-- OpenStreetMap for geocoding services
-- The open-source community for the amazing tools and libraries
+### Development Guidelines
+- **Backend**: Follow Python PEP 8 style guide
+- **Frontend**: Use TypeScript and ESLint rules
+- **Testing**: Test all API integrations
+- **Documentation**: Update READMEs for new features
 
 ## 📞 Support
 
-For questions or issues:
-- Create an issue on GitHub
-- Check the todo.md for current progress
-- Review the API documentation
+### Getting Help
+1. **Check the detailed READMEs**:
+   - [Backend README](backend/README.md) for API issues
+   - [Frontend README](frontend/README.md) for UI issues
+2. **Check browser console** for error messages
+3. **Verify environment variables** are set correctly
+4. **Ensure both services are running** on correct ports
+
+### Troubleshooting Resources
+- **Backend logs**: Check terminal output when running `python main.py`
+- **Frontend logs**: Check browser DevTools console
+- **API testing**: Use http://localhost:8000/docs for interactive testing
+- **Network issues**: Check browser Network tab for failed requests
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-**Status**: ✅ Phase 3 Complete - Enhanced API Ready | 🚧 Phase 4 In Progress - Frontend Development  
-**Current Achievement**: Professional FastAPI backend with 50 KL outlets, advanced search, GPS-based nearby search, comprehensive documentation, and modern React frontend with interactive maps  
-**Last Updated**: January 2025 
+## 🎉 Ready to Explore!
+
+Once both services are running:
+
+1. **🗺️ Explore the Map**: View all McDonald's outlets in Malaysia
+2. **📍 Use Location Services**: Find outlets near your current location
+3. **🤖 Chat with AI**: Ask questions like "Find McDonald's in KLCC"
+4. **🧭 Get Directions**: Click Waze buttons for turn-by-turn navigation
+5. **📱 Try Mobile**: Test on your phone for the full experience
+
+**Happy exploring! 🍟🚀** 

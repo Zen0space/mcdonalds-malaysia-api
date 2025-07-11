@@ -9,6 +9,186 @@ from .models import Outlet, validate_outlet_data
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+class DatabaseOperations:
+    """
+    Async database operations for chat service and API endpoints.
+    
+    This class provides async methods for database operations
+    needed by the chat service and other components.
+    """
+    
+    def __init__(self):
+        self.client = get_db_client()
+    
+    async def get_nearby_outlets(self, latitude: float, longitude: float, 
+                                radius_km: float = 2.0, limit: int = 20) -> List[Dict[str, Any]]:
+        """
+        Get nearby outlets within radius using Haversine formula.
+        
+        Args:
+            latitude: User latitude
+            longitude: User longitude
+            radius_km: Search radius in kilometers
+            limit: Maximum number of results
+            
+        Returns:
+            List of outlet dictionaries with distance
+        """
+        try:
+            # Haversine formula for distance calculation
+            # Note: SQLite doesn't support HAVING with calculated columns, so we use a subquery
+            query = """
+            SELECT id, name, address, operating_hours, waze_link, latitude, longitude, distance
+            FROM (
+                SELECT id, name, address, operating_hours, waze_link, latitude, longitude,
+                       (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
+                       cos(radians(longitude) - radians(?)) + sin(radians(?)) * 
+                       sin(radians(latitude)))) AS distance
+                FROM outlets 
+                WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+            ) AS outlets_with_distance
+            WHERE distance <= ?
+            ORDER BY distance
+            LIMIT ?
+            """
+            
+            result = self.client.execute(query, (latitude, longitude, latitude, radius_km, limit))
+            
+            outlets = []
+            for row in result.rows:
+                outlet = {
+                    'id': row[0],
+                    'name': row[1],
+                    'address': row[2],
+                    'operating_hours': row[3],
+                    'waze_link': row[4],
+                    'latitude': row[5],
+                    'longitude': row[6],
+                    'distance_km': f"{row[7]:.2f}"
+                }
+                outlets.append(outlet)
+            
+            logger.info(f"Found {len(outlets)} nearby outlets within {radius_km}km")
+            return outlets
+            
+        except Exception as e:
+            logger.error(f"Failed to get nearby outlets: {str(e)}")
+            return []
+    
+    async def search_outlets(self, search_query: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """
+        Search outlets by name or address.
+        
+        Args:
+            search_query: Search term
+            limit: Maximum number of results
+            
+        Returns:
+            List of outlet dictionaries
+        """
+        try:
+            query = """
+            SELECT id, name, address, operating_hours, waze_link, latitude, longitude
+            FROM outlets 
+            WHERE name LIKE ? OR address LIKE ?
+            ORDER BY name
+            LIMIT ?
+            """
+            
+            search_term = f"%{search_query}%"
+            result = self.client.execute(query, (search_term, search_term, limit))
+            
+            outlets = []
+            for row in result.rows:
+                outlet = {
+                    'id': row[0],
+                    'name': row[1],
+                    'address': row[2],
+                    'operating_hours': row[3],
+                    'waze_link': row[4],
+                    'latitude': row[5],
+                    'longitude': row[6]
+                }
+                outlets.append(outlet)
+            
+            logger.info(f"Found {len(outlets)} outlets matching '{search_query}'")
+            return outlets
+            
+        except Exception as e:
+            logger.error(f"Failed to search outlets: {str(e)}")
+            return []
+    
+    async def get_all_outlets(self, limit: int = 50) -> List[Dict[str, Any]]:
+        """
+        Get all outlets with limit.
+        
+        Args:
+            limit: Maximum number of results
+            
+        Returns:
+            List of outlet dictionaries
+        """
+        try:
+            query = """
+            SELECT id, name, address, operating_hours, waze_link, latitude, longitude
+            FROM outlets 
+            ORDER BY name
+            LIMIT ?
+            """
+            
+            result = self.client.execute(query, (limit,))
+            
+            outlets = []
+            for row in result.rows:
+                outlet = {
+                    'id': row[0],
+                    'name': row[1],
+                    'address': row[2],
+                    'operating_hours': row[3],
+                    'waze_link': row[4],
+                    'latitude': row[5],
+                    'longitude': row[6]
+                }
+                outlets.append(outlet)
+            
+            logger.info(f"Retrieved {len(outlets)} outlets")
+            return outlets
+            
+        except Exception as e:
+            logger.error(f"Failed to get all outlets: {str(e)}")
+            return []
+    
+    async def health_check(self) -> Dict[str, Any]:
+        """
+        Check database health and connectivity.
+        
+        Returns:
+            Health check result dictionary
+        """
+        try:
+            # Test database connectivity
+            result = self.client.execute("SELECT COUNT(*) FROM outlets")
+            total_outlets = result.rows[0][0] if result.rows else 0
+            
+            # Test a simple query
+            test_result = self.client.execute("SELECT 1")
+            
+            return {
+                "status": "healthy",
+                "database_connected": True,
+                "total_outlets": total_outlets,
+                "test_query_success": bool(test_result.rows)
+            }
+            
+        except Exception as e:
+            logger.error(f"Database health check failed: {str(e)}")
+            return {
+                "status": "unhealthy",
+                "database_connected": False,
+                "error": str(e),
+                "total_outlets": 0
+            }
+
 class OutletDatabase:
     """Database operations for outlets"""
     

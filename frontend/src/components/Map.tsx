@@ -287,9 +287,9 @@ const Map = memo(function Map({ outlets, showRadius, intersectionData, onOutletC
 
   // Handle selected outlet - show individual radius and highlight intersecting outlets
   useEffect(() => {
-    if (!mapRef.current || !selectedOutlet || !intersectionData) return
+    if (!mapRef.current) return
 
-    // Clear previous selected outlet visualization
+    // Always clear previous selected outlet visualization first
     if (selectedCircleRef.current) {
       mapRef.current.removeLayer(selectedCircleRef.current)
       selectedCircleRef.current = null
@@ -301,6 +301,9 @@ const Map = memo(function Map({ outlets, showRadius, intersectionData, onOutletC
       }
     })
     selectedMarkersRef.current = []
+
+    // If no outlet is selected or no intersection data, just clear and return
+    if (!selectedOutlet || !intersectionData) return
 
     // Add radius circle for selected outlet
     const selectedCircle = L.circle([selectedOutlet.latitude, selectedOutlet.longitude], {
@@ -319,7 +322,7 @@ const Map = memo(function Map({ outlets, showRadius, intersectionData, onOutletC
     const intersectionInfo = intersectionData.get(selectedOutlet.id)
     if (intersectionInfo && intersectionInfo.hasIntersection) {
       // Add highlighted markers for intersecting outlets
-             intersectionInfo.intersectingOutlets.forEach((intersectingOutlet: NeighborOutlet) => {
+      intersectionInfo.intersectingOutlets.forEach((intersectingOutlet: NeighborOutlet) => {
         const highlightMarker = L.marker([intersectingOutlet.latitude, intersectingOutlet.longitude], {
           icon: L.divIcon({
             html: `
@@ -352,9 +355,9 @@ const Map = memo(function Map({ outlets, showRadius, intersectionData, onOutletC
             iconSize: [50, 50],
             iconAnchor: [25, 25]
           })
-                 }).addTo(mapRef.current!)
-         
-         selectedMarkersRef.current.push(highlightMarker)
+        }).addTo(mapRef.current!)
+        
+        selectedMarkersRef.current.push(highlightMarker)
       })
     }
 

@@ -281,55 +281,48 @@ async def find_nearby_outlets(
 ):
     """Find outlets within specified radius using Haversine formula."""
     try:
-        # Query all outlets with coordinates
-        result = db.execute("""
-            SELECT id, name, address, operating_hours, waze_link, 
-                   latitude, longitude, features, created_at, updated_at 
+        # Use efficient SQL-based Haversine formula calculation
+        query = """
+        SELECT id, name, address, operating_hours, waze_link, latitude, longitude, 
+               features, created_at, updated_at, distance
+        FROM (
+            SELECT id, name, address, operating_hours, waze_link, latitude, longitude,
+                   features, created_at, updated_at,
+                   (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
+                   cos(radians(longitude) - radians(?)) + sin(radians(?)) * 
+                   sin(radians(latitude)))) AS distance
             FROM outlets 
             WHERE latitude IS NOT NULL AND longitude IS NOT NULL
-        """)
+        ) AS outlets_with_distance
+        WHERE distance <= ?
+        ORDER BY distance
+        LIMIT ?
+        """
+        
+        result = db.execute(query, (latitude, longitude, latitude, radius, limit))
         
         nearby_outlets = []
-        
-        # Calculate distance for each outlet using Haversine formula
         for row in result.rows:
-            outlet_lat = float(row[5])
-            outlet_lng = float(row[6])
-            
-            # Haversine formula for distance calculation
-            import math
-            R = 6371  # Earth's radius in kilometers
-            
-            lat1, lon1 = math.radians(latitude), math.radians(longitude)
-            lat2, lon2 = math.radians(outlet_lat), math.radians(outlet_lng)
-            
-            dlat = lat2 - lat1
-            dlon = lon2 - lon1
-            
-            a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-            c = 2 * math.asin(math.sqrt(a))
-            distance = R * c
-            
-            # Only include outlets within radius
-            if distance <= radius:
+            # Safely handle potential None values and data conversion
+            try:
                 outlet = NearbyOutletResponse(
                     id=row[0],
                     name=row[1],
                     address=row[2],
                     operating_hours=row[3],
                     waze_link=row[4],
-                    latitude=outlet_lat,
-                    longitude=outlet_lng,
-                    features=json.loads(row[7]) if row[7] else [],
+                    latitude=float(row[5]) if row[5] is not None else 0.0,
+                    longitude=float(row[6]) if row[6] is not None else 0.0,
+                    features=json.loads(row[7]) if row[7] and row[7].strip() else [],
                     created_at=datetime.fromisoformat(row[8]) if row[8] else datetime.now(),
                     updated_at=datetime.fromisoformat(row[9]) if row[9] else datetime.now(),
-                    distance_km=round(distance, 2)
+                    distance_km=round(float(row[10]), 2) if row[10] is not None else 0.0
                 )
                 nearby_outlets.append(outlet)
-        
-        # Sort by distance and apply limit
-        nearby_outlets.sort(key=lambda x: x.distance_km)
-        nearby_outlets = nearby_outlets[:limit]
+            except (ValueError, TypeError, json.JSONDecodeError) as e:
+                # Skip outlets with invalid data but log the issue
+                print(f"Warning: Skipping outlet {row[0]} due to data error: {str(e)}")
+                continue
         
         return NearbySearchResponse(
             outlets=nearby_outlets,

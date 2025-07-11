@@ -32,11 +32,8 @@ httpx==0.25.2
 pytest==7.4.3
 pytest-asyncio==0.21.1
 
-# Chatbot (Phase 5) - FREE OPTIONS
-google-genai==0.8.0
-langchain==0.1.0
-transformers==4.36.0
-torch==2.1.0
+# Chatbot (Phase 5) - Gemini 2.5 Flash
+google-genai>=0.8.0
 
 # Utilities
 python-json-logger==2.0.7
