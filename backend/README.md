@@ -49,37 +49,13 @@ pip install -r requirements.txt
 playwright install
 ```
 
-### 5. Environment Setup
-Create a `.env` file in the backend directory:
-```bash
-# Copy the example environment file
-cp .env.example .env
-```
-
-Edit `.env` with your configuration:
-```env
-# Gemini API Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Database Configuration (optional - defaults to SQLite)
-TURSO_DATABASE_URL=your_turso_url_here
-TURSO_AUTH_TOKEN=your_turso_token_here
-
-# API Configuration
-API_HOST=0.0.0.0
-API_PORT=8000
-DEBUG=true
-
-# Scraping Configuration
-SCRAPING_DELAY=2.0
-SCRAPING_HEADLESS=true
-```
-
-### 6. Database Setup
+### 5. Database Setup
 ```bash
 # Run database migration (adds features column if needed)
 python migrate_db.py
 ```
+
+**Note**: Environment variables are configured in the project root directory. See the [main README](../README.md) for environment setup instructions.
 
 ## 🚀 Quick Start
 
@@ -167,7 +143,6 @@ backend/
 ├── main.py                 # Application entry point
 ├── requirements.txt        # Python dependencies
 ├── migrate_db.py          # Database migration script
-├── .env.example           # Environment template
 ├── outlets.db             # SQLite database (auto-created)
 └── src/
     ├── api/               # FastAPI application
@@ -193,34 +168,12 @@ backend/
         └── validators.py         # Coordinate validation
 ```
 
-## 🔧 Configuration
-
-### Environment Variables
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `GEMINI_API_KEY` | Google Gemini API key for chatbot | - | Yes |
-| `TURSO_DATABASE_URL` | Turso database URL (optional) | - | No |
-| `TURSO_AUTH_TOKEN` | Turso auth token (optional) | - | No |
-| `API_HOST` | API server host | `0.0.0.0` | No |
-| `API_PORT` | API server port | `8000` | No |
-| `DEBUG` | Enable debug mode | `false` | No |
-| `SCRAPING_DELAY` | Delay between scraping requests | `2.0` | No |
-| `SCRAPING_HEADLESS` | Run browser in headless mode | `true` | No |
-
-### Database Configuration
-
-The backend supports both SQLite (default) and Turso (cloud) databases:
-
-- **SQLite**: Automatically creates `outlets.db` in the backend directory
-- **Turso**: Requires `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`
-
 ## 🤖 Chatbot Setup
 
 ### 1. Get Gemini API Key
 1. Visit [Google AI Studio](https://aistudio.google.com/)
 2. Create a new API key
-3. Add it to your `.env` file as `GEMINI_API_KEY`
+3. Add it to the project root `.env` file as `GEMINI_API_KEY`
 
 ### 2. Test Chatbot
 ```bash
@@ -383,19 +336,12 @@ result = client.execute("SELECT COUNT(*) as count FROM outlets")
 print(f"Total outlets: {result.rows[0]['count']}")
 ```
 
-#### Environment Variables Required
-```env
-# Required in .env file
-TURSO_DATABASE_URL=libsql://your-database-url.turso.io
-TURSO_AUTH_TOKEN=your_auth_token_here
-```
-
 #### Connection Features
 - **Automatic Connection Management**: Handles connection lifecycle
 - **Context Manager Support**: Use with `with` statements
 - **Error Handling**: Comprehensive error messages for missing config
 - **Global Instance**: Shared connection across the application
-- **Environment Loading**: Automatically loads from `.env` file
+- **Environment Loading**: Automatically loads from project root `.env` file
 
 #### Connection Troubleshooting
 ```bash
@@ -407,7 +353,7 @@ result = client.execute('SELECT 1 as test')
 print('Connection successful:', result.rows)
 "
 
-# Check environment variables
+# Check environment variables (from project root)
 python -c "
 import os
 from dotenv import load_dotenv
@@ -576,14 +522,18 @@ python migrate_db.py
 ls -la outlets.db
 ```
 
-#### 3. Gemini API Errors
+#### 3. Environment Variable Errors
 ```bash
-# Verify API key in .env file
-cat .env | grep GEMINI_API_KEY
+# Check if .env exists in project root
+ls -la ../.env
 
-# Test API key manually
-curl -H "Authorization: Bearer YOUR_API_KEY" \
-  https://generativelanguage.googleapis.com/v1/models
+# Verify environment variables are loaded
+python -c "
+import os
+from dotenv import load_dotenv
+load_dotenv()
+print('Gemini API Key:', 'Set' if os.getenv('GEMINI_API_KEY') else 'Not set')
+"
 ```
 
 #### 4. Playwright Issues
@@ -599,7 +549,7 @@ playwright install-deps
 
 - **API Logs**: Check console output when running `python main.py`
 - **Scraper Logs**: Located in `logs/` directory
-- **Database Logs**: Enable with `DEBUG=true` in `.env`
+- **Database Logs**: Enable with `DEBUG=true` in project root `.env`
 
 ## 🔄 Development Workflow
 
@@ -608,8 +558,8 @@ playwright install-deps
 # Install development dependencies
 pip install -r requirements.txt
 
-# Enable debug mode
-echo "DEBUG=true" >> .env
+# Enable debug mode (in project root .env)
+echo "DEBUG=true" >> ../.env
 
 # Start with auto-reload
 python main.py
@@ -666,22 +616,16 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ### Environment Variables for Production
-```env
-DEBUG=false
-API_HOST=0.0.0.0
-API_PORT=8000
-GEMINI_API_KEY=your_production_key
-TURSO_DATABASE_URL=your_production_db_url
-TURSO_AUTH_TOKEN=your_production_token
-```
+See the [main README](../README.md) for complete environment configuration.
 
 ## 📞 Support
 
 ### Getting Help
 1. **Documentation**: Check API docs at `/docs` endpoint
-2. **Issues**: Create GitHub issues for bugs
-3. **Logs**: Check console output and log files
-4. **Database**: Use SQLite browser for data inspection
+2. **Main README**: See [project root README](../README.md) for environment setup
+3. **Issues**: Create GitHub issues for bugs
+4. **Logs**: Check console output and log files
+5. **Database**: Use SQLite browser for data inspection
 
 ### Contributing
 1. Fork the repository
