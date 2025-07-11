@@ -11,22 +11,13 @@ services:
       - key: PYTHON_VERSION
         value: "3.11"
       - key: TURSO_DATABASE_URL
-        fromService:
-          type: web
-          name: mcd-scraper-api
-          envVarKey: TURSO_DATABASE_URL
+        sync: false
       - key: TURSO_AUTH_TOKEN
-        fromService:
-          type: web
-          name: mcd-scraper-api
-          envVarKey: TURSO_AUTH_TOKEN
+        sync: false
       - key: GEOCODING_PROVIDER
         value: "nominatim"
       - key: GEMINI_API_KEY
-        fromService:
-          type: web
-          name: mcd-scraper-api
-          envVarKey: GEMINI_API_KEY
+        sync: false
       - key: CHATBOT_PROVIDER
         value: "gemini"
       - key: DEBUG
