@@ -12,6 +12,8 @@ export function parseOutletInfo(content: string): OutletInfo[] | null {
     return null;
   }
 
+  console.log('🔍 Parsing outlet content:', content);
+
   const outlets: OutletInfo[] = [];
   
   // Split by outlet entries starting with **McDonald's or numbered items
@@ -19,6 +21,8 @@ export function parseOutletInfo(content: string): OutletInfo[] | null {
   
   for (const block of outletBlocks) {
     if (!block.trim() || !block.includes('**McDonald\'s')) continue;
+    
+    console.log('🏪 Processing block:', block);
     
     try {
       // Extract name (line with **McDonald's) - handle both formats
@@ -50,10 +54,14 @@ export function parseOutletInfo(content: string): OutletInfo[] | null {
       // Clean up operating hours - remove Waze Link if it got included
       operatingHours = operatingHours.replace(/Waze Link:.*$/i, '').trim();
       
-      // Extract Waze link (after **Waze Link:** or Waze Link:)
+      // Extract Waze link - more flexible patterns
       const wazeMatch = block.match(/\*\*Waze Link:\*\*\s*(https?:\/\/[^\s]+)/) || 
-                       block.match(/Waze Link:\s*(https?:\/\/[^\s]+)/);
+                       block.match(/Waze Link:\s*(https?:\/\/[^\s]+)/) ||
+                       block.match(/(https?:\/\/(?:www\.)?waze\.com[^\s]*)/i) ||
+                       block.match(/(https?:\/\/[^\s]*waze[^\s]*)/i);
       const wazeLink = wazeMatch ? wazeMatch[1].trim() : '';
+      
+      console.log('🔗 Extracted data:', { name, address, distance, operatingHours, wazeLink });
       
       // Only add if we have at least name and address
       if (name && address) {
@@ -71,6 +79,7 @@ export function parseOutletInfo(content: string): OutletInfo[] | null {
     }
   }
   
+  console.log('📋 Final outlets:', outlets);
   return outlets.length > 0 ? outlets : null;
 }
 

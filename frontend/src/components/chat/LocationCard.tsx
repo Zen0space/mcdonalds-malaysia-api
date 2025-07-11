@@ -15,6 +15,10 @@ interface LocationCardProps {
 }
 
 const LocationCard: React.FC<LocationCardProps> = ({ outlet }) => {
+  // Debug logging
+  console.log('🏪 LocationCard received outlet data:', outlet);
+  console.log('🔗 Waze link present:', !!outlet.wazeLink, 'Value:', outlet.wazeLink);
+
   const handleWazeClick = () => {
     if (outlet.wazeLink) {
       window.open(outlet.wazeLink, '_blank', 'noopener,noreferrer');
@@ -77,9 +81,9 @@ const LocationCard: React.FC<LocationCardProps> = ({ outlet }) => {
           )}
         </div>
 
-        {/* Waze Button */}
-        {outlet.wazeLink && (
-          <div className="pt-2">
+        {/* Waze Button - Always show for debugging */}
+        <div className="pt-2">
+          {outlet.wazeLink ? (
             <button
               onClick={handleWazeClick}
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg transform hover:scale-105"
@@ -89,8 +93,12 @@ const LocationCard: React.FC<LocationCardProps> = ({ outlet }) => {
               </svg>
               <span>Navigate with Waze</span>
             </button>
-          </div>
-        )}
+          ) : (
+            <div className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded">
+              Debug: No Waze link found
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
