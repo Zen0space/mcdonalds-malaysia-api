@@ -7,7 +7,6 @@
   "regions": ["sin1"],
   "functions": {
     "api/**/*.py": {
-      "runtime": "python3.12",
       "maxDuration": 10,
       "memory": 512
     }
