@@ -370,4 +370,4 @@ Once both services are running:
 4. **🧭 Get Directions**: Click Waze buttons for turn-by-turn navigation
 5. **📱 Try Mobile**: Test on your phone for the full experience
 
-**Happy exploring! 🍟🚀** 
+**Happy exploring! 🍟🚀** # Vercel deployment trigger
