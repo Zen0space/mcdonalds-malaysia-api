@@ -2,20 +2,20 @@
  * API service for McDonald's Malaysia Chatbot
  */
 
-import { 
-  ChatApiResponse, 
-  CreateSessionResponse, 
-  ChatResponse, 
-  SendMessageRequest 
-} from '../types/chat';
+import {
+  ChatApiResponse,
+  CreateSessionResponse,
+  ChatResponse,
+  SendMessageRequest,
+} from '../types/chat'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
 
 class ChatApiService {
-  private baseUrl: string;
+  private baseUrl: string
 
   constructor() {
-    this.baseUrl = `${API_BASE_URL}/api/v1/chat`;
+    this.baseUrl = `${API_BASE_URL}`
   }
 
   /**
@@ -29,30 +29,32 @@ class ChatApiService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({}),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
-      console.error('Failed to create chat session:', error);
+      console.error('Failed to create chat session:', error)
       return {
         success: false,
         error: {
           message: 'Failed to create chat session',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      };
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
     }
   }
 
   /**
    * Send a message to the chatbot
    */
-  async sendMessage(request: SendMessageRequest): Promise<ChatApiResponse<ChatResponse>> {
+  async sendMessage(
+    request: SendMessageRequest
+  ): Promise<ChatApiResponse<ChatResponse>> {
     try {
       const response = await fetch(`${this.baseUrl}/message`, {
         method: 'POST',
@@ -60,23 +62,23 @@ class ChatApiService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error('Failed to send message:', error)
       return {
         success: false,
         error: {
           message: 'Failed to send message',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      };
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
     }
   }
 
@@ -90,23 +92,23 @@ class ChatApiService {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
-      console.error('Failed to get chat history:', error);
+      console.error('Failed to get chat history:', error)
       return {
         success: false,
         error: {
           message: 'Failed to get chat history',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      };
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
     }
   }
 
@@ -120,23 +122,23 @@ class ChatApiService {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
-      console.error('Failed to delete session:', error);
+      console.error('Failed to delete session:', error)
       return {
         success: false,
         error: {
           message: 'Failed to delete session',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      };
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
     }
   }
 
@@ -150,26 +152,26 @@ class ChatApiService {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
-      console.error('Chat service health check failed:', error);
+      console.error('Chat service health check failed:', error)
       return {
         success: false,
         error: {
           message: 'Chat service health check failed',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      };
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
     }
   }
 }
 
-export const chatApi = new ChatApiService();
-export default chatApi; 
+export const chatApi = new ChatApiService()
+export default chatApi
