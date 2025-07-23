@@ -1,0 +1,55 @@
+services:
+  # Web service for the McDonald's Malaysia API
+  - type: web
+    name: mcdonalds-malaysia-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # API Configuration
+      - key: ENVIRONMENT
+        value: production
+
+      # CORS Configuration
+      - key: CORS_ORIGINS
+        value: "*"  # Update with your frontend URL in production
+
+      # Geocoding Configuration
+      - key: GEOCODING_PROVIDER
+        value: nominatim
+      - key: NOMINATIM_USER_AGENT
+        value: mcdonalds-malaysia-api
+
+      # Chatbot Configuration (optional)
+      - key: CHATBOT_PROVIDER
+        value: gemini
+      - key: GOOGLE_API_KEY
+        sync: false  # Set this in Render dashboard
+
+      # Logging
+      - key: LOG_LEVEL
+        value: info
+      - key: DEBUG
+        value: false
+
+      # Database Configuration (if using PostgreSQL on Render)
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mcdonalds-db
+          property: connectionString
+
+    # Health check configuration
+    healthCheckPath: /health
+
+    # Auto-deploy configuration
+    autoDeploy: true  # Auto-deploy on git push
+
+    # Plan configuration
+    plan: free  # Change to 'starter' or higher for production
+
+# Database configuration (optional - uncomment if needed)
+# databases:
+#   - name: mcdonalds-db
+#     databaseName: mcdonalds_malaysia
+#     plan: free  # Change to 'starter' or higher for production
+#     ipAllowList: []  # Allow connections from anywhere
