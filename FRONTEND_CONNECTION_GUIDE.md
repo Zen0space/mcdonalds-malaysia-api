@@ -2,6 +2,19 @@
 
 This guide explains how to connect your McDonald's Malaysia frontend application to the deployed backend API.
 
+## 🎯 Quick Start
+
+**Your backend API is deployed at:** `https://mcdonalds-malaysia-api.onrender.com`
+
+**API Documentation:** `https://mcdonalds-malaysia-api.onrender.com/docs`
+
+Simply update your frontend's `.env.local` file:
+```env
+NEXT_PUBLIC_API_URL=https://mcdonalds-malaysia-api.onrender.com
+```
+
+That's it! Your frontend will now connect to the deployed backend.
+
 ## 🔗 Quick Setup
 
 ### 1. Update Frontend Environment Variables
@@ -13,7 +26,7 @@ In your frontend repository, create or update `.env.local`:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 
 # Production (Render backend)
-NEXT_PUBLIC_API_URL=https://your-backend-name.onrender.com
+NEXT_PUBLIC_API_URL=https://mcdonalds-malaysia-api.onrender.com
 ```
 
 ### 2. Update Backend CORS Settings
@@ -38,7 +51,7 @@ CORS_ORIGINS=http://localhost:3000,https://your-frontend.vercel.app
 After deploying to Render:
 1. Go to your Render dashboard
 2. Click on your backend service
-3. Copy the URL (e.g., `https://mcdonalds-malaysia-api.onrender.com`)
+3. Copy the URL: `https://mcdonalds-malaysia-api.onrender.com`
 
 ### Step 2: Configure Frontend API Service
 
@@ -186,7 +199,7 @@ async function testConnection() {
 Open your frontend and run in browser console:
 
 ```javascript
-fetch('https://your-backend.onrender.com/health')
+fetch('https://mcdonalds-malaysia-api.onrender.com/health')
   .then(res => res.json())
   .then(data => console.log('API is working:', data))
   .catch(err => console.error('API error:', err));
@@ -235,7 +248,7 @@ const response = await api.get('/outlets', {
 **Solutions**:
 1. Check if API URL has trailing slash
 2. Verify endpoint paths match backend routes
-3. Check API documentation at `https://your-backend.onrender.com/docs`
+3. Check API documentation at `https://mcdonalds-malaysia-api.onrender.com/docs`
 
 ### Issue 4: Environment Variables Not Loading
 
@@ -353,11 +366,11 @@ When reporting issues, include:
 ### Quick Fixes
 
 1. **Clear Browser Cache**: Force refresh with Ctrl+Shift+R
-2. **Check API Status**: Visit `https://your-backend.onrender.com/health`
+2. **Check API Status**: Visit `https://mcdonalds-malaysia-api.onrender.com/health`
 3. **Verify Environment**: Ensure `.env.local` is loaded
 4. **Test with Curl**: Test backend directly:
    ```bash
-   curl https://your-backend.onrender.com/outlets
+   curl https://mcdonalds-malaysia-api.onrender.com/outlets
    ```
 
 ---
