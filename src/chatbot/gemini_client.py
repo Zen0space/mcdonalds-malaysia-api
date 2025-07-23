@@ -37,39 +37,39 @@ class ChatMessage:
 class GeminiClient:
     """
     Client for Google Gemini 2.5 Flash model with function calling.
-    
+
     This client handles:
     - Gemini API authentication
     - Chat session management with function calling tools
     - Message generation with intelligent function selection
     - Error handling and retries
     """
-    
+
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize Gemini client with function calling capabilities.
-        
+
         Args:
             api_key: Gemini API key. If None, reads from GEMINI_API_KEY env var.
         """
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY environment variable or api_key parameter required")
-        
+
         if genai is None:
             raise ImportError("google-genai package not installed. Please install: pip install google-genai")
-        
+
         # Initialize the client
         self.client = genai.Client(api_key=self.api_key)
         self.model_name = "gemini-2.5-flash"
-        
+
         # McDonald's specific system instruction with function calling guidance
         self.system_instruction = """
 You are a helpful McDonald's Malaysia assistant with access to real-time outlet data through intelligent functions.
 
 🍟 AVAILABLE FUNCTIONS:
 - find_nearby_outlets: Find outlets near GPS coordinates (use for location-based queries)
-- search_outlets: Search by name/address (use for specific outlet searches)  
+- search_outlets: Search by name/address (use for specific outlet searches)
 - get_outlet_details: Get specific outlet info (use for hours, details, directions)
 - get_outlet_stats: Get general database info (use for coverage/total questions)
 - get_api_health: Check system health (use for technical issues)
@@ -116,17 +116,17 @@ You have access to McDonald's outlets in Kuala Lumpur, Malaysia, including:
 
 Remember: Always call the appropriate function first to get current data, then provide helpful responses based on the results.
 """
-        
+
         logger.info(f"Initialized Gemini client with function calling: {self.model_name}")
-    
+
     def create_chat_session(self, session_id: str, db_ops: Any) -> Dict[str, Any]:
         """
         Create a new chat session with Gemini 2.5 Flash and function calling tools.
-        
+
         Args:
             session_id: Unique identifier for the chat session
             db_ops: Database operations instance for function calling
-            
+
         Returns:
             Dict containing chat session information
         """
@@ -144,7 +144,7 @@ Remember: Always call the appropriate function first to get current data, then p
                     logger.error(f"bound_find_nearby_outlets error: {str(e)}")
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     return {"success": False, "error": f"Function execution error: {str(e)}"}
-            
+
             def bound_search_outlets(search_query: str, limit: int) -> Dict[str, Any]:
                 """Search McDonald's outlets by name or address. Use for specific outlet searches like 'McDonald's KLCC'."""
                 try:
@@ -154,7 +154,7 @@ Remember: Always call the appropriate function first to get current data, then p
                     logger.error(f"bound_search_outlets error: {str(e)}")
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     return {"success": False, "error": f"Function execution error: {str(e)}"}
-            
+
             def bound_get_outlet_details(outlet_id: int) -> Dict[str, Any]:
                 """Get detailed information for a specific outlet. Use when you need hours, address, or directions."""
                 try:
@@ -164,7 +164,7 @@ Remember: Always call the appropriate function first to get current data, then p
                     logger.error(f"bound_get_outlet_details error: {str(e)}")
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     return {"success": False, "error": f"Function execution error: {str(e)}"}
-            
+
             def bound_get_outlet_stats() -> Dict[str, Any]:
                 """Get database statistics. Use for questions about total outlets or coverage."""
                 try:
@@ -174,7 +174,7 @@ Remember: Always call the appropriate function first to get current data, then p
                     logger.error(f"bound_get_outlet_stats error: {str(e)}")
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     return {"success": False, "error": f"Function execution error: {str(e)}"}
-            
+
             def bound_get_api_health() -> Dict[str, Any]:
                 """Check API health. Use for technical issues or system status."""
                 try:
@@ -184,7 +184,7 @@ Remember: Always call the appropriate function first to get current data, then p
                     logger.error(f"bound_get_api_health error: {str(e)}")
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     return {"success": False, "error": f"Function execution error: {str(e)}"}
-            
+
             # Test the synchronous bound functions to ensure they work
             logger.info("🧪 Testing synchronous bound functions...")
             try:
@@ -213,9 +213,9 @@ Remember: Always call the appropriate function first to get current data, then p
                     ]
                 )
             )
-            
+
             logger.info(f"Created chat session with function calling: {session_id}")
-            
+
             return {
                 "session_id": session_id,
                 "chat": chat,
@@ -224,49 +224,49 @@ Remember: Always call the appropriate function first to get current data, then p
                 "db_ops": db_ops,
                 "function_calling_enabled": True
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to create chat session {session_id}: {str(e)}")
             raise
-    
+
     def send_message(self, chat_session: Dict[str, Any], message: str, user_location: Optional[Dict] = None) -> str:
         """
         Send a message to Gemini with function calling support.
-        
+
         Args:
             chat_session: Chat session from create_chat_session
             message: User message
             user_location: Optional user location {lat, lng}
-            
+
         Returns:
             AI response string
         """
         try:
             chat = chat_session["chat"]
-            
+
             # Add location context if provided
             enhanced_message = message
             if user_location:
                 enhanced_message = f"User location: {user_location['lat']}, {user_location['lng']}\n\n{message}"
-            
+
             # Send message to Gemini (functions will be called automatically)
             response = chat.send_message(enhanced_message)
-            
+
             # Update message count
             chat_session["message_count"] += 1
-            
+
             logger.info(f"Sent message to session {chat_session['session_id']}, got response with function calling")
-            
+
             return response.text
-            
+
         except Exception as e:
             logger.error(f"Failed to send message with function calling: {str(e)}")
             return "I'm sorry, I encountered an error while processing your request. Please try again or ask a different question."
-    
+
     def get_model_info(self) -> Dict[str, Any]:
         """
         Get information about the Gemini model with function calling.
-        
+
         Returns:
             Model information dictionary
         """
@@ -286,17 +286,17 @@ Remember: Always call the appropriate function first to get current data, then p
             ],
             "available_functions": [
                 "find_nearby_outlets",
-                "search_outlets", 
+                "search_outlets",
                 "get_outlet_details",
                 "get_outlet_stats",
                 "get_api_health"
             ]
         }
-    
+
     def health_check(self) -> Dict[str, Any]:
         """
         Check if Gemini API is accessible with function calling.
-        
+
         Returns:
             Health check result
         """
@@ -309,10 +309,10 @@ Remember: Always call the appropriate function first to get current data, then p
                     max_output_tokens=10
                 )
             )
-            
+
             # Send a simple test message
             response = test_chat.send_message("Hello")
-            
+
             return {
                 "status": "healthy",
                 "model": self.model_name,
@@ -320,7 +320,7 @@ Remember: Always call the appropriate function first to get current data, then p
                 "api_accessible": True,
                 "function_calling_ready": True
             }
-            
+
         except Exception as e:
             logger.error(f"Gemini health check failed: {str(e)}")
             return {
@@ -329,4 +329,4 @@ Remember: Always call the appropriate function first to get current data, then p
                 "error": str(e),
                 "api_accessible": False,
                 "function_calling_ready": False
-            } 
+            }
