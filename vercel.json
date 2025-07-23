@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "framework": "nextjs",
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/.next",
-  "installCommand": "cd frontend && npm install",
-  "regions": ["sin1"],
-  "functions": {
-    "api/**/*.py": {
-      "maxDuration": 10,
-      "memory": 512
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -22,17 +21,12 @@
     }
   ],
   "env": {
-    "PYTHON_VERSION": "3.12",
-    "NEXT_PUBLIC_API_URL": "https://$VERCEL_URL/api"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_MAP_PROVIDER": "react-leaflet",
-      "NEXT_PUBLIC_MAP_TILES": "openstreetmap",
-      "GEOCODING_PROVIDER": "nominatim",
-      "CHATBOT_PROVIDER": "gemini",
-      "DEBUG": "false",
-      "LOG_LEVEL": "info"
-    }
+    "NEXT_PUBLIC_API_URL": "/api",
+    "NEXT_PUBLIC_MAP_PROVIDER": "react-leaflet",
+    "NEXT_PUBLIC_MAP_TILES": "openstreetmap",
+    "GEOCODING_PROVIDER": "nominatim",
+    "CHATBOT_PROVIDER": "gemini",
+    "DEBUG": "false",
+    "LOG_LEVEL": "info"
   }
 }
