@@ -12,7 +12,6 @@
       "/js/app.js?v=1752133981",
       "https://www.mcdonalds.com.my/js/legacy/autocomplete.js",
       "/storefinder/includes/geoip.php",
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyBeaTF3a3-dYGwNE43DglhUt-sgJQfJh_U&sensor=false&libraries=geometry,places",
       "/storefinder/js/jquery.geocomplete.js",
       "/js/locateus.js"
     ],
